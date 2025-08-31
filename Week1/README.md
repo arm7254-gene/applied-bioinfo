@@ -71,3 +71,36 @@ figures
 
 project/results/figures:
 ```
+
+## 3) Creating files in different directories
+
+**Commands**
+
+```bash
+$ echo "raw sequencing data" > project/data/raw/sample1.txt
+$ echo "processed sequencing data" > project/data/processed/sample1_processed.txt
+$ echo "figure placeholder" > project/results/figures/figure1.txt
+```
+
+**Output (directory listing)**
+
+```txt
+data
+results
+
+project/data:
+processed
+raw
+
+project/data/processed:
+sample1_processed.txt
+
+project/data/raw:
+sample1.txt
+
+project/results:
+figures
+
+project/results/figures:
+figure1.txt
+```
