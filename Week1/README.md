@@ -104,3 +104,25 @@ figures
 project/results/figures:
 figure1.txt
 ```
+
+## 4) Accessing files via relative and absolute paths
+
+**Commands and Output**
+
+```bash
+$ cat project/data/raw/sample1.txt
+raw sequencing data
+
+$ cat project/data/processed/sample1_processed.txt
+processed sequencing data
+
+$ cat project/results/figures/figure1.txt
+figure placeholder
+```
+
+**Absolute paths**
+
+```bash
+$ cat /Users/annettemercedes/Documents/GitHub/applied-bioinfo/Week1/project/data/raw/sample1.txt
+raw sequencing data
+```
