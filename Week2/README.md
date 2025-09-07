@@ -24,8 +24,7 @@ grep -v "^#" spoon_bill.gff3 | cut -f3 | sort | uniq -c | sort -nr
 # Count mRNA features (these represent the genes/transcripts)
 grep -v "^#" spoon_bill.gff3 | grep -w "mRNA" | wc -l
 
-To find the top-ten most annotated feature types, use this command:
-bash# Get the top 10 most common feature types
+# Get the top 10 most common feature types
 grep -v "^#" spoon_bill.gff3 | cut -f3 | sort | uniq -c | sort -nr | head -10
 
 # Calculate total genome size
