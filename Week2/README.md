@@ -31,8 +31,6 @@ grep -v "^#" spoon_bill.gff3 | cut -f3 | sort | uniq -c | sort -nr | head -10
 # Calculate total genome size
 grep -v "^#" spoon_bill.gff3 | grep region | awk '{sum += $5} END {print "Total genome size:", sum " bp"}'
 
-# Average scaffold size
-
 ```
 
 ## 1. Tell us a bit about the organism.
