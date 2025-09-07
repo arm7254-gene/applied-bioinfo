@@ -46,9 +46,9 @@ The **spoon-billed sandpiper** (Calidris pygmaea) is a small wader which breeds 
 
 ## 3. How many features does the file contain?
 
-345146 exon
-51938 mRNA
-29818 region
+* 345146 exon
+* 51938 mRNA
+* 29818 region
 
 ## 4. How many genes are listed for this organism?
 
@@ -56,13 +56,13 @@ The **spoon-billed sandpiper** (Calidris pygmaea) is a small wader which breeds 
 
 ## 5. Is there a feature type that you may have not heard about before? What is the feature and how is it defined? (If there is no such feature, pick a common feature.)
 
-The region feature type is defined in the GFF3 specification as: A sequence_feature with an extent greater than zero.
+The region feature type is defined in the GFF3 specification as: A sequence feature with an extent greater than zero.
 
 ## 6. What are the top-ten most annotated feature types (column 3) across the genome?
 
-345146 exon
-51938 mRNA
-29818 region
+* 345146 exon
+* 51938 mRNA
+* 29818 region
 
 ## 7. Having analyzed this GFF file, does it seem like a complete and well-annotated organism?
 
