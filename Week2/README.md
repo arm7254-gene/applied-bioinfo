@@ -2,6 +2,10 @@
 
 # Week 2: Command Log
 
+```bash
+# Use wget to fetch the file
+wget ftp://ftp.ensembl.org/pub/current_gff3/calidris_pygmaea/Calidris_pygmaea.CalPyg1.1.gff3.gz
+
 ## 1. Tell us a bit about the organism.
 
 ## 2. How many sequence regions (chromosomes) does the file contain? Does that match with the expectation for this organism?
