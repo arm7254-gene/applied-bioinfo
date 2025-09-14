@@ -39,3 +39,8 @@ gunzip Borreliella_burgdorferi_b31_gca_000008685.ASM868v2.62.gff3.gz
 #make file name simpler
 mv Borreliella_burgdorferi_b31_gca_000008685.ASM868v2.62.gff3 burg.gff
 
+```
+
+## 1. How big is the genome, and how many features of each type does the GFF file contain?
+
+## 2. 
