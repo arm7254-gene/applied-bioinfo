@@ -46,6 +46,7 @@ grep -v "^#" burg.gff | grep region | awk '{sum += $5} END {print "Total genome 
 grep -v "^#" burg.gff | cut -f3 | sort | uniq -c | sort -nr
 
 ```
+# Week 3: Assignment Prompts
 
 ## 1. How big is the genome, and how many features of each type does the GFF file contain?
 
