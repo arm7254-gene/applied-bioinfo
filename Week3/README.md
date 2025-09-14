@@ -45,6 +45,22 @@ grep -v "^#" burg.gff | grep region | awk '{sum += $5} END {print "Total genome 
 # See what types of features are present and their counts
 grep -v "^#" burg.gff | cut -f3 | sort | uniq -c | sort -nr
 
+# Separate the intervals of type "gene" or "transcript" into a different file.
+
+# Just genes
+ grep -E $'\tgene\t' burg.gff > genes_only.gff
+
+# Check gene file
+wc -l genes_only.gff
+cut -f3 genes_only.gff | sort | uniq -c
+
+# Just transcripts (mRNA)
+grep -E $'\tmRNA\t' burg.gff > transcripts_only.gff
+
+# Check transcript file  
+wc -l transcripts_only.gff
+cut -f3 transcripts_only.gff | sort | uniq -c
+
 ```
 # Week 3: Assignment Prompts
 
@@ -58,5 +74,8 @@ Total genome size: 646320 bp
 * 1339 gene
 * 21 region
 * 1 chromosome
-  
+
+## 2. IGV Screenshot
+<img width="1150" height="690" alt="igv_snapshot" src="https://github.com/user-attachments/assets/43b2656f-66e4-4bd8-9874-7f6369e118f3" />
+
 
