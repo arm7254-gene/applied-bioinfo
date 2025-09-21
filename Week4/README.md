@@ -62,6 +62,18 @@ grep -E "Name=[a-zA-Z]{3,}" | head -10
 grep "SAOUHSC_00004" S_aureus_USA300_annotation.gff | awk '$3=="gene"' | \
 awk '{print "Length:", $5-$4+1, "bp"; print "Location:", $1":"$4"-"$5}'
 
+# Calculate genome size
+genome_size=$(grep -v "^>" S_aureus_USA300_genome.fna | wc -c)
+echo "Total genome size: $genome_size bp"
+
+# Calculate total coding sequence length
+total_cds=$(grep -v "^#" S_aureus_USA300_annotation.gff | awk '$3=="CDS"' | \
+awk '{sum += $5-$4+1} END{print sum}')
+echo "Total CDS length: $total_cds bp"
+
+# Calculate coding percentage
+echo "scale=2; $total_cds * 100 / $genome_size" | bc -l
+echo "% of genome is protein-coding"
 
 ```
 # Week 4 Assignment Questions
@@ -108,5 +120,11 @@ awk '{print "Length:", $5-$4+1, "bp"; print "Location:", $1":"$4"-"$5}'
     - Function: The RecF protein is involved in DNA metabolism; it is required for DNA replication and normal SOS inducibility. RecF binds preferentially to single-stranded, linear DNA. It also seems to bind ATP.
       
 12. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
-13. Using IGV estimate how much of the genome is covered by coding sequences.
-14. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
+    - Total genome size:  2856629 bp
+    - Total CDS length: 2352093 bp
+    - ~82% coding
+    - Gene density: 0.99 genes per kb
+    - Yes, the genomic features appear to be very closely packed with relatively little intergenic space. The bacteria have evolved to be genomically efficient - almost every base pair serves a purpose!
+      
+14. Using IGV estimate how much of the genome is covered by coding sequences.
+15. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
