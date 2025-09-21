@@ -43,6 +43,17 @@ Step 2: Basic Analysis Commands
 ```bash
 # Calculate total genome size
 grep -v "^#" S_aureus_USA300_annotation.gff | grep region | awk '{sum += $5} END {print "Total genome size:", sum " bp"}'
+
+# See what types of features are present and their counts
+grep -v "^#" S_aureus_USA300_annotation.gff | cut -f3 | sort | uniq -c | sort -nr
+
+# Find longest genes and extract their attributes (including names)
+grep -v "^#" S_aureus_USA300_annotation.gff | awk '$3=="gene"' | \
+awk '{
+    gene_length=$5-$4+1; 
+    print gene_length, $1, $4, $5, $9
+}' | sort -nr | head -10
+
 ```
 # Week 4 Assignment Questions
 
@@ -57,12 +68,29 @@ grep -v "^#" S_aureus_USA300_annotation.gff | grep region | awk '{sum += $5} END
       * Treatment replicate 3 - SRR21835899
         
 2. How big is the genome
-   Total genome size: 17509287 bp
+   - Total genome size: 17509287 bp
    
 4. How many features of each type does the GFF file contain?
-5. What is the longest gene?
-6. What is its name and function?
-7. Pick another gene and describe its name and function.
-8. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
-9. Using IGV estimate how much of the genome is covered by coding sequences.
-10. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
+   - 2842 gene
+   - 2767 CDS
+   - 77 exon
+   - 59 tRNA
+   - 30 pseudogene
+   - 16 rRNA
+   - 2 pseudogenic_tRNA
+   - 1 region
+   
+6. What is the longest gene?
+   - Locus tag: SAOUHSC_01447
+   - Length: 28,608 base pairs (28.6 kb)
+   - Location: NC_007795.1:1376091-1404698
+   - GeneID: 3920225
+     
+8. What is its name and function?
+   - conserved hypothetical protein
+   - UniProt: Extracellular matrix-binding protein ebh - Promotes bacterial attachment to both soluble and immobilized forms of         fibronectin (Fn), in a dose-dependent and saturable manner.
+     
+10. Pick another gene and describe its name and function.
+11. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
+12. Using IGV estimate how much of the genome is covered by coding sequences.
+13. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
