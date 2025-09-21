@@ -4,6 +4,8 @@
 
 ```bash
 # Create project directory
+mkdir project
+
 
 
 
