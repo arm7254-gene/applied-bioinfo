@@ -54,3 +54,12 @@ Step 2: Basic Analysis Commands
       * Treatment replicate 1 - SRR21835901	
       * Treatment replicate 2 - SRR21835900
       * Treatment replicate 3 - SRR21835899
+        
+2. How big is the genome
+3. How many features of each type does the GFF file contain?
+4. What is the longest gene?
+5. What is its name and function?
+6. Pick another gene and describe its name and function.
+7. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
+8. Using IGV estimate how much of the genome is covered by coding sequences.
+9. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
