@@ -54,6 +54,15 @@ awk '{
     print gene_length, $1, $4, $5, $9
 }' | sort -nr | head -10
 
+# Look for genes with recognizable names (not just locus tags)
+grep -v "^#" S_aureus_USA300_annotation.gff | grep "gene" | \
+grep -E "Name=[a-zA-Z]{3,}" | head -10
+
+# Get the size and location of recF
+grep "SAOUHSC_00004" S_aureus_USA300_annotation.gff | awk '$3=="gene"' | \
+awk '{print "Length:", $5-$4+1, "bp"; print "Location:", $1":"$4"-"$5}'
+
+
 ```
 # Week 4 Assignment Questions
 
@@ -88,9 +97,16 @@ awk '{
      
 8. What is its name and function?
    - conserved hypothetical protein
-   - UniProt: Extracellular matrix-binding protein ebh - Promotes bacterial attachment to both soluble and immobilized forms of         fibronectin (Fn), in a dose-dependent and saturable manner.
+   - Protein: Extracellular matrix-binding protein ebh
+   - Function: Promotes bacterial attachment to both soluble and immobilized forms of         fibronectin (Fn), in a dose-dependent and saturable manner.
      
 10. Pick another gene and describe its name and function.
-11. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
-12. Using IGV estimate how much of the genome is covered by coding sequences.
-13. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
+    - recF
+    - Length: 1113 bp
+    - Location: NC_007795.1:3912-5024
+    - Protein: DNA replication and repair protein RecF
+    - Function: The RecF protein is involved in DNA metabolism; it is required for DNA replication and normal SOS inducibility. RecF binds preferentially to single-stranded, linear DNA. It also seems to bind ATP.
+      
+12. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
+13. Using IGV estimate how much of the genome is covered by coding sequences.
+14. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
