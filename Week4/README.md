@@ -41,7 +41,8 @@ head -5 S_aureus_USA300_annotation.gff
 ```
 Step 2: Basic Analysis Commands
 ```bash
-
+# Calculate total genome size
+grep -v "^#" S_aureus_USA300_annotation.gff | grep region | awk '{sum += $5} END {print "Total genome size:", sum " bp"}'
 ```
 # Week 4 Assignment Questions
 
@@ -56,10 +57,12 @@ Step 2: Basic Analysis Commands
       * Treatment replicate 3 - SRR21835899
         
 2. How big is the genome
-3. How many features of each type does the GFF file contain?
-4. What is the longest gene?
-5. What is its name and function?
-6. Pick another gene and describe its name and function.
-7. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
-8. Using IGV estimate how much of the genome is covered by coding sequences.
-9. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
+   Total genome size: 17509287 bp
+   
+4. How many features of each type does the GFF file contain?
+5. What is the longest gene?
+6. What is its name and function?
+7. Pick another gene and describe its name and function.
+8. Look at the genomic features, are these closely packed, is there a lot of intragenomic space?
+9. Using IGV estimate how much of the genome is covered by coding sequences.
+10. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
