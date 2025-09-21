@@ -2,6 +2,7 @@
 
 # Week 4 Command Log
 
+Step 1: Download the Reference Genome and Annotations
 ```bash
 # Create main project directory
 mkdir project
@@ -37,6 +38,9 @@ echo -e "\nAnnotation file:"
 ls -lh S_aureus_USA300_annotation.gff
 echo "First few annotation lines:"
 head -5 S_aureus_USA300_annotation.gff
+```
+Step 2: Basic Analysis Commands
+```bash
 
 ```
 # Week 4 Assignment Questions
