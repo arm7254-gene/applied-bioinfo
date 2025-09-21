@@ -127,4 +127,8 @@ echo "% of genome is protein-coding"
     - Yes, the genomic features appear to be very closely packed with relatively little intergenic space. The bacteria have evolved to be genomically efficient - almost every base pair serves a purpose!
       
 14. Using IGV estimate how much of the genome is covered by coding sequences.
-15. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers). 
+    - Had issues loading files. Kept getting "Unknown file type: /Users/annettemercedes/Documents/GitHub/applied-bioinfo/project/mrsa_analysis/S_aureus_USA300_genome.fastaCheck file extension"
+      
+16. Find alternative genome builds that could be used to perhaps answer a different question (find their accession numbers).
+    - Staphylococcus aureus strain:MRSA107
+    - GCF_002895385.1
