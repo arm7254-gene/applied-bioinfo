@@ -5,11 +5,11 @@
 ## Step 1: Write a Bash script:
 
 ```bash
-#!/bin/bash
-
 # Expanded MRSA data download script
 # Building on code from last week
 # BioProject: PRJNA887926
+
+# Original code from last week (NOT executed, just for reference)
 
 echo "MRSA RNA-seq data download script"
 echo "Building on last week's genome download"
