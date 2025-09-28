@@ -2,6 +2,8 @@
 
 # Week 5 Command Log
 
+## Step 1: Write a Bash script:
+
 ```bash
 #!/bin/bash
 
