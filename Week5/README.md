@@ -131,9 +131,6 @@ echo "- Downloaded 100,000 pairs to be safe"
 
 echo "Running FASTQC quality control analysis..."
 
-# Navigate to project directory (assuming you're running from the same location)
-cd project/mrsa_analysis
-
 # Set sample name (same as in download script)
 SAMPLE="SRR21835896"
 
