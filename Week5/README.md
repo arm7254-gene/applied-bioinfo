@@ -44,7 +44,9 @@ mv GCF_000013425.1_ASM1342v1_genomic.gff S_aureus_USA300_annotation.gff
 
 echo "Reference genome downloaded and renamed"
 
-# To use this script:
+# ============================================
+
+# To use this week's script:
 # 1. Create file: nano download_mrsa.sh (paste below script content, Ctrl+O, Enter, Ctrl+X)
 # 2. Make it executable: chmod +x download_mrsa.sh  
 # 3. Run it: ./download_mrsa.sh
