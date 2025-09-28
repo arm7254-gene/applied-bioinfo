@@ -5,60 +5,96 @@
 ```bash
 #!/bin/bash
 
-# Simple script to download MRSA RNA-seq data
+# Expanded MRSA data download script
+# Building on code from last week
 # BioProject: PRJNA887926
 
-echo "Downloading MRSA data from BioProject PRJNA887926"
+echo "MRSA RNA-seq data download script"
+echo "Building on last week's genome download"
 
-# Make directories
-mkdir -p mrsa_data
-cd mrsa_data
-mkdir metadata fastq reference
+# Original code from last week - setting up directories and downloading genome
+echo "Setting up project structure..."
 
-# Get the sample information (from last week)
+# Create main project directory
+mkdir -p project
+cd project/
+
+# Create specific project directory  
+mkdir -p mrsa_analysis
+cd mrsa_analysis
+
+# Activate environment
+echo "Activating bioinfo environment..."
+micromamba activate bioinfo
+
+echo "Downloading reference genome (from last week)..."
+
+# Get the genome FASTA file
+wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.fna.gz"
+wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.gff.gz"
+
+# Unzip the files
+gunzip *.gz
+
+# Rename for easier use
+mv GCF_000013425.1_ASM1342v1_genomic.fna S_aureus_USA300_genome.fna
+mv GCF_000013425.1_ASM1342v1_genomic.gff S_aureus_USA300_annotation.gff
+
+echo "Reference genome downloaded and renamed"
+
+# NEW CODE - Expanding from last week to download RNA-seq data
+echo ""
+echo "=== NEW THIS WEEK: Downloading RNA-seq samples ==="
+
+# Create directory for RNA-seq data
+mkdir -p rnaseq_data
+mkdir -p metadata
+
+# BioProject and SRR numbers identified last week
 echo "BioProject: PRJNA887926"
-echo "Control samples: SRR21835896, SRR21835897, SRR21835898" 
+echo "Control samples: SRR21835896, SRR21835897, SRR21835898"  
 echo "Treatment samples: SRR21835899, SRR21835900, SRR21835901"
 
-# Download metadata
-echo "Getting project info..."
+# Get project metadata
+echo "Getting sample information..."
 esearch -db sra -query "PRJNA887926[BioProject]" | efetch -format runinfo > metadata/runinfo.csv
 
-# Pick one sample to download - using first control sample
+# Pick one sample to download for 10x coverage
 SAMPLE="SRR21835896"
-echo "Downloading sample: $SAMPLE"
+echo "Downloading sample: $SAMPLE (Control replicate 3)"
 
 # Download the SRA file
-prefetch $SAMPLE --output-directory ./
+echo "Downloading SRA file..."
+prefetch $SAMPLE --output-directory rnaseq_data/
 
-# Convert to fastq but only get some reads for 10x coverage
-# S. aureus genome is ~2.8 Mb, so 10x coverage = 28 Mb sequence
-# With 150bp paired reads, need about 93,000 read pairs
-echo "Converting to fastq (limiting to ~100k reads for 10x coverage)..."
-fasterq-dump $SAMPLE/$SAMPLE.sra --outdir fastq/ --split-files --stop 100000
+# Convert to fastq with read limit for 10x coverage
+echo "Converting to FASTQ (limiting reads for ~10x coverage)..."
 
-# Compress the files
-gzip fastq/*.fastq
+# Coverage calculation:
+# S. aureus genome = ~2.8 Mb
+# 10x coverage = 28 Mb sequence needed  
+# 150bp paired reads = 300bp per pair
+# 28,000,000 / 300 = ~93,000 read pairs
+# Using 100,000 to be safe
 
-# Download reference genome
-echo "Downloading reference genome..."
-cd reference
-wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.fna.gz"
-wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.gff.gz" 
-gunzip *.gz
-cd ..
+fasterq-dump rnaseq_data/$SAMPLE/$SAMPLE.sra --outdir rnaseq_data/ --split-files --stop 100000
 
-echo "Done! Downloaded:"
-echo "- Sample $SAMPLE with ~100k read pairs"  
-echo "- Reference genome and annotation"
-echo "- Should give about 10x coverage of S. aureus genome"
+# Compress fastq files
+echo "Compressing FASTQ files..."
+gzip rnaseq_data/*.fastq
 
-# How I calculated 10x coverage:
-# S. aureus genome = ~2.8 million bp
-# 10x coverage = 28 million bp of sequence needed
-# 150bp paired reads (300bp total per pair)
-# 28,000,000 / 300 = ~93,000 read pairs needed
-# I used 100,000 to be safe
+echo ""
+echo "Download complete!"
+echo "Files downloaded:"
+echo "- Reference genome: S_aureus_USA300_genome.fna"
+echo "- Gene annotation: S_aureus_USA300_annotation.gff" 
+echo "- RNA-seq sample: $SAMPLE (~100k read pairs for 10x coverage)"
+echo ""
+echo "10x coverage calculation:"
+echo "- S. aureus genome size: ~2.8 million bp"
+echo "- 10x coverage needs: 28 million bp of sequence"
+echo "- With 150bp paired reads: ~93,000 pairs needed"
+echo "- Downloaded 100,000 pairs to be safe"
 ```
 
 # Week 5 Assignment Questions
