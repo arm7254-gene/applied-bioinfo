@@ -114,7 +114,17 @@ echo "- Downloaded 100,000 pairs to be safe"
 # - Edit the file: nano download_mrsa.sh
 # - Run again: ./download_mrsa.sh
 ```
-## Step 2: Run FASTQC
+## Step 2: Check Stats
+
+```bash
+seqkit stats reads/SRR21835896_1.fastq
+
+# > **Output**
+
+#...
+```
+
+## Step 3: Run FASTQC
 
 ```bash
 # FASTQC Quality Control Script
