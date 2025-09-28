@@ -123,4 +123,6 @@ echo "- Downloaded 100,000 pairs to be safe"
 - SRR Accession Numbers:
    - Control samples: SRR21835896, SRR21835897, SRR21835898
    - Treatment samples: SRR21835899, SRR21835900, SRR21835901
+ 
+2. FASTQC Summarized Findings
 
