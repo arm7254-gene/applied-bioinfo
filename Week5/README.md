@@ -42,6 +42,13 @@ mv GCF_000013425.1_ASM1342v1_genomic.gff S_aureus_USA300_annotation.gff
 
 echo "Reference genome downloaded and renamed"
 
+# To use this week's script:
+# 1. Save this file as download_mrsa.sh
+# nano download_mrsa.sh
+# Then paste the script content and save (Ctrl+X, Y, Enter)
+# 2. Make it executable: chmod +x download_mrsa.sh  
+# 3. Run it: ./download_mrsa.sh
+
 # NEW CODE - Expanding from last week to download RNA-seq data
 echo ""
 echo "=== NEW THIS WEEK: Downloading RNA-seq samples ==="
@@ -95,6 +102,11 @@ echo "- S. aureus genome size: ~2.8 million bp"
 echo "- 10x coverage needs: 28 million bp of sequence"
 echo "- With 150bp paired reads: ~93,000 pairs needed"
 echo "- Downloaded 100,000 pairs to be safe"
+
+# End of script
+# To run this script again or modify it:
+# - Edit the file: nano download_mrsa.sh
+# - Run again: ./download_mrsa.sh
 ```
 
 # Week 5 Assignment Questions
