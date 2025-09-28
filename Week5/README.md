@@ -49,6 +49,8 @@ echo "Reference genome downloaded and renamed"
 # 2. Make it executable: chmod +x download_mrsa.sh  
 # 3. Run it: ./download_mrsa.sh
 
+# ============================================
+#!/bin/bash
 # NEW CODE - Expanding from last week to download RNA-seq data
 echo ""
 echo "=== NEW THIS WEEK: Downloading RNA-seq samples ==="
