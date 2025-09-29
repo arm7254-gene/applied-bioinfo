@@ -196,3 +196,19 @@ echo "FASTQC analysis complete!"
  
 2. FASTQC Summarized Findings
 
+FASTQC Quality Report Summary
+- Sample: SRR21835896_1 (Control replicate, RNA-seq data)
+- Overall Quality: GOOD - suitable for downstream analysis
+
+**Key Metrics:**
+
+* 15.75 million high-quality reads (101 bp each)
+* 33% GC content (appropriate for S. aureus)
+* Zero poor-quality sequences flagged
+
+**Notable Findings:**
+
+* High sequence duplication detected (top sequence = 2.38% of reads)
+* This is typical for bacterial RNA-seq due to highly expressed genes
+
+**Conclusion:** Data quality is adequate for gene expression analysis and comparison with propionate-treated samples.
