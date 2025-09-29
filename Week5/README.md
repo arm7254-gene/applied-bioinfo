@@ -117,10 +117,15 @@ echo "- Downloaded 100,000 pairs to be safe"
 ## Step 2: Check Stats
 
 ```bash
-seqkit stats reads/SRR21835896_1.fastq
+# Navigate to rnaseq_data directory where FASTQ files are stored
+cd rnaseq_data/
+
+# Generate basic statistics for the RNA-seq data (read count, length, etc.)
+seqkit stats SRR21835896_1.fastq.gz
 
 # > **Output**
-
+file                    format  type    num_seqs        sum_len  min_len  avg_len  max_len
+SRR21835896_1.fastq.gz  FASTQ   DNA   15,754,542  1,591,208,742      101      101      101
 #...
 ```
 
