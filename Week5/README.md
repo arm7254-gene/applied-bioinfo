@@ -125,8 +125,26 @@ seqkit stats SRR21835896_1.fastq.gz
 
 # > **Output**
 file                    format  type  num_seqs     sum_len  min_len  avg_len  max_len
-SRR21835896_1.fastq.gz  FASTQ   DNA    100,000  10,100,000      101      101      101
+SRR21835896_1.fastq.gz  FASTQ   DNA    140,000  14,140,000      101      101      101
 #...
+
+seqkit stats SRR21835896_2.fastq.gz
+
+# > **Output**
+file                    format  type  num_seqs     sum_len  min_len  avg_len  max_len
+SRR21835896_2.fastq.gz  FASTQ   DNA    140,000  14,140,000      101      101      101
+#...
+
+seqkit stats SRR21835896_1.fastq.gz SRR21835896_2.fastq.gz | \
+awk 'NR==1{print $0; next} {n+=$4; b+=$5; print} END{print "combined","FASTQ","DNA",n,b,"101","101","101"}'
+
+# > **Output**
+file                    format  type  num_seqs     sum_len  min_len  avg_len  max_len
+SRR21835896_1.fastq.gz  FASTQ   DNA    140,000  14,140,000      101      101      101
+SRR21835896_2.fastq.gz  FASTQ   DNA    140,000  14,140,000      101      101      101
+combined FASTQ DNA 280 28 101 101 101
+#...
+
 ```
 
 ## Step 3: Run FASTQC
