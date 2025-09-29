@@ -207,7 +207,7 @@ FASTQC Quality Report Summary
 
 **Key Metrics:**
 
-* 15.75 million high-quality reads (101 bp each)
+* 100,000 reads (101 bp each, totaling 10.1 Mbp)
 * 33% GC content (appropriate for S. aureus)
 * Zero poor-quality sequences flagged
 
@@ -215,5 +215,11 @@ FASTQC Quality Report Summary
 
 * High sequence duplication detected (top sequence = 2.38% of reads)
 * This is typical for bacterial RNA-seq due to highly expressed genes
+
+**Coverage Achievement:**
+
+Target: 10x coverage (~28 Mbp needed for 2.8 Mb genome)
+Actual: ~3.6x coverage with current subset
+Note: Would need ~138,000 read pairs for true 10x coverage
 
 **Conclusion:** Data quality is adequate for gene expression analysis and comparison with propionate-treated samples.
