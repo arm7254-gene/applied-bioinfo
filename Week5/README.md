@@ -124,8 +124,8 @@ cd rnaseq_data/
 seqkit stats SRR21835896_1.fastq.gz
 
 # > **Output**
-file                    format  type    num_seqs        sum_len  min_len  avg_len  max_len
-SRR21835896_1.fastq.gz  FASTQ   DNA   15,754,542  1,591,208,742      101      101      101
+file                    format  type  num_seqs     sum_len  min_len  avg_len  max_len
+SRR21835896_1.fastq.gz  FASTQ   DNA    100,000  10,100,000      101      101      101
 #...
 ```
 
