@@ -206,6 +206,11 @@ fi
 
 echo "FASTQC analysis complete!"
 
+# End of script
+# To run this script again or modify it:
+# - Edit the file: nano run_fastqc.sh
+# - Run again: ./run_fastqc.sh
+
 ```
 
 # Week 5 Assignment Questions
