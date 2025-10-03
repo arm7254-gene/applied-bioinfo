@@ -90,7 +90,7 @@ echo "Converting to FASTQ (limiting reads for ~10x coverage)..."
 # 28,000,000 / 300 = ~93,000 read pairs
 # Using 100,000 to be safe
 
-fastq-dump -X 100000 --outdir rnaseq_data/ --split-files rnaseq_data/$SAMPLE/$SAMPLE.sra
+fastq-dump -X 140000 --split-files --outdir rnaseq_data/ rnaseq_data/SRR21835896/SRR21835896.sra
 
 # Compress fastq files
 echo "Compressing FASTQ files..."
