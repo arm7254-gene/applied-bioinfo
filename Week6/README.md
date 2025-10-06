@@ -50,14 +50,16 @@ This week’s assignment required transforming last week’s bash script into a 
 2. Download sequencing reads from SRA (sample SRR21835896)
 
 **Commands:**
-* To run the full workflow (download genome + reads):
+* Run everything in sequence:
 ```bash
-make
+make && make index && make align
 ```
 * To run an individual step:
 ```bash
-make genome.fna.gz        # download genome only
-make SRR21835896_1.fastq.gz   # download reads only
+make           # Download genome, annotation, metadata, and reads
+make index     # Index the genome
+make align     # Align reads and create sorted BAM
+make clean     # Remove all generated files
 ```
 * To clean up (remove downloaded files):
 ```bash
