@@ -59,7 +59,7 @@ $(ANNOT):
 $(FASTQ1) $(FASTQ2):
 	mkdir -p rnaseq_data
 	prefetch $(SAMPLE) --output-directory rnaseq_data/
-	fastq-dump -X 100000 --split-files --gzip --outdir rnaseq_data rnaseq_data/$(SAMPLE)/$(SAMPLE).sra
+	fastq-dump -X 140000 --split-files --gzip --outdir rnaseq_data rnaseq_data/$(SAMPLE)/$(SAMPLE).sra
 
 # Rule: unzip genome (needed for indexing)
 $(GENOME_UNZIPPED): $(GENOME)
@@ -137,6 +137,29 @@ make clean
 # Week 6 Assignment Questions
 
 1. What percentage of reads aligned to the genome?
+   - 99.01%
+   - Total primary reads: 280,000
+   - Primary mapped reads: 277,238
+   - Percentage: 277,238 / 280,000 = 99.01%
 2. What was the expected average coverage?
+   - Given:
+     * Number of read pairs: 140,000
+     * Read length: 101 bp (from your seqkit analysis)
+     * Total reads: 280,000 (140,000 × 2)
+     * Genome size: S. aureus USA300 ≈ 2.8 Mb (2,800,000 bp)
+```bash
+Total sequenced bases = 280,000 reads × 101 bp = 28,280,000 bp
+
+Expected coverage = Total bases / Genome size
+                  = 28,280,000 / 2,800,000
+                  = 10.1x
+```
 3. What is the observed average coverage?
+   To get the actual observed coverage, you need to run:
+   ```bash
+   samtools depth alignments/SRR21835896.sorted.bam | awk '{sum+=$3} END {print "Average coverage: " sum/NR}'
+   ```
+   - Average coverage: 22.1946
 4. How much does the coverage vary across the genome? (Provide a visual estimate.)
+   
+<img width="1440" height="518" alt="igv_panel" src="https://github.com/user-attachments/assets/f217e856-e38a-4dc3-8a3f-e47bfd710dad" />
