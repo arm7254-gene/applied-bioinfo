@@ -132,8 +132,6 @@ make stats
 make clean
 ```
 
-## Step 3: Visualize the resulting BAM files for both simulated reads and reads downloaded from SRA.
-
 # Week 6 Assignment Questions
 
 1. What percentage of reads aligned to the genome?
@@ -168,4 +166,5 @@ Expected coverage = Total bases / Genome size
 	- Coverage varies dramatically across the genome when visualized in IGV. This is expected for RNA-seq data, as coverage reflects gene       expression levels rather than uniform genomic coverage. 
 
 <img width="1440" height="775" alt="igv_s_aureus_snapshot" src="https://github.com/user-attachments/assets/508de507-0c88-4698-b9d4-aa3379861aa6" />
+
 
