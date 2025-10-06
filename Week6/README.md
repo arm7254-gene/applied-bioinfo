@@ -1,7 +1,5 @@
 # Week 6 Assignment
 
-# Week 6 Assignment
-
 # Week 6 Command Log
 
 ## Step 1: Transform the script into a Makefile that includes rules for: Obtaining the genome and Downloading sequencing reads from SRA
@@ -178,3 +176,4 @@ Expected coverage = Total bases / Genome size
 	- Coverage varies dramatically across the genome when visualized in IGV. This is expected for RNA-seq data, as coverage reflects gene expression levels rather than uniform genomic coverage. 
 
 <img width="1440" height="775" alt="igv_s_aureus_snapshot" src="https://github.com/user-attachments/assets/508de507-0c88-4698-b9d4-aa3379861aa6" />
+
