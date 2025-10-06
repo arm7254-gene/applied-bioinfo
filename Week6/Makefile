@@ -72,3 +72,14 @@ clean:
 	rm -rf rnaseq_data metadata alignments $(GENOME) $(ANNOT) $(GENOME_UNZIPPED) $(GENOME_UNZIPPED).*
 
 .PHONY: all clean index align
+
+# Alignment statistics file
+BAM_STATS = alignments/$(SAMPLE).stats.txt
+
+# Rule: generate alignment statistics
+stats: $(BAM_STATS)
+
+$(BAM_STATS): $(BAM_SORTED)
+	samtools flagstat $(BAM_SORTED) > $(BAM_STATS)
+	@echo "=== Alignment Statistics ===" 
+	@cat $(BAM_STATS)
