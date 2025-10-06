@@ -164,6 +164,8 @@ Expected coverage = Total bases / Genome size
    ```
    - Average coverage: 22.1946
 4. How much does the coverage vary across the genome? (Provide a visual estimate.)
-   
+
+	- Coverage varies dramatically across the genome when visualized in IGV. This is expected for RNA-seq data, as coverage reflects gene       expression levels rather than uniform genomic coverage. 
 
 <img width="1440" height="775" alt="igv_s_aureus_snapshot" src="https://github.com/user-attachments/assets/508de507-0c88-4698-b9d4-aa3379861aa6" />
+
