@@ -228,6 +228,8 @@ FASTQC Quality Report Summary
 - Sample: SRR21835896_1 (Control replicate, RNA-seq data)
 - Overall Quality: GOOD - suitable for downstream analysis
 
+<img width="969" height="905" alt="image" src="https://github.com/user-attachments/assets/303c3c8a-09ea-4339-be9b-3e533cd16e7a" />
+
 **Key Metrics:**
 
 * 140,000 read pairs (280,000 total reads; 101 bp each, totaling ~28.3 Mbp)
