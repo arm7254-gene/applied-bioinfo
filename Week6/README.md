@@ -108,8 +108,18 @@ $(BAM_STATS): $(BAM_SORTED)
 Using the Makefile
 
 This week’s assignment required transforming last week’s bash script into a Makefile. The Makefile automates two main tasks:
-1. Download the reference genome from NCBI RefSeq
-2. Download sequencing reads from SRA (sample SRR21835896)
+
+1. Data Acquisition:
+* Download the reference genome - S. aureus USA300 genome from NCBI RefSeq
+* Download genome annotation - GFF file with gene annotations
+* Download metadata - Sample metadata from SRA BioProject PRJNA887926
+* Download sequencing reads - RNA-seq paired-end reads (140,000 read pairs, sample SRR21835896)
+
+2. Read Alignment Pipeline:
+* Index the genome (make index) - Creates BWA index files for efficient read alignment
+* Align reads (make align) - Aligns RNA-seq reads to the reference genome using BWA MEM, generates a sorted and indexed BAM file
+3. Quality Control:
+* Generate alignment statistics (make stats) - Produces alignment quality metrics using samtools flagstat
 
 **Commands:**
 * Run everything in sequence:
@@ -166,5 +176,6 @@ Expected coverage = Total bases / Genome size
 	- Coverage varies dramatically across the genome when visualized in IGV. This is expected for RNA-seq data, as coverage reflects gene       expression levels rather than uniform genomic coverage. 
 
 <img width="1440" height="775" alt="igv_s_aureus_snapshot" src="https://github.com/user-attachments/assets/508de507-0c88-4698-b9d4-aa3379861aa6" />
+
 
 
