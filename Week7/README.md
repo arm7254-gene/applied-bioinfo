@@ -1,1 +1,3 @@
-# Week 7 Assignment
+# Week  Assignment
+
+# Week 7 Command Log
