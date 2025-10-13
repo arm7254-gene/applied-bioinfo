@@ -88,6 +88,6 @@ The Makefile generates the following organized directory structure:
 | **Cross-chromosomal mates**  |         0         |         0         | No evidence of mis-mapped pairs.                                              |
 
 3. How many primary alignments does each of your BAM files contain?
-   Both BAM files contain 280,000 primary alignments, corresponding to 140,000 read pairs each (since these are paired-end RNA-seq reads).
+   - Both BAM files contain 280,000 primary alignments, corresponding to 140,000 read pairs each (since these are paired-end RNA-seq reads).
 4. What coordinate has the largest observed coverage (hint samtools depth)
 5. Select a gene of interest. How many alignments on a forward strand cover the gene?
