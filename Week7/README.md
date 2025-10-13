@@ -71,7 +71,8 @@ The Makefile generates the following organized directory structure:
 
 ## IGV Screenshots
 
-<img width="2922" height="1562" alt="S aureus_igv-app" src="https://github.com/user-attachments/assets/613b100f-202c-43f6-a9a5-a279f7120be2" />
+<img width="2922" height="1782" alt="S_aureus2_igv-app" src="https://github.com/user-attachments/assets/3260e866-2608-484b-a58a-540b08a2da7f" />
+
 
 
 # Week 7 Assignment Questions
