@@ -75,6 +75,18 @@ The Makefile generates the following organized directory structure:
 
 1. Briefly describe the differences between the alignment in both files.
 2. Briefly compare the statistics for the two BAM files.
+
+| Metric                       |  **SRR34850871**  |  **SRR21835896**  | **Interpretation**                                                            |
+| :--------------------------- | :---------------: | :---------------: | :---------------------------------------------------------------------------- |
+| **Total reads**              |      281,631      |      280,163      | Nearly identical total input reads.                                           |
+| **Primary alignments**       |      280,000      |      280,000      | Both are paired-end, 140k read pairs each.                                    |
+| **Supplementary alignments** |       1,631       |        163        | SRR34850871 has ~10× more supplementary alignments (chimeric or split reads). |
+| **Duplicates**               |         0         |         0         | No PCR duplication detected — good.                                           |
+| **Mapped reads**             | 274,696 (97.54 %) | 277,401 (99.01 %) | Slightly higher mapping rate for SRR21835896.                                 |
+| **Properly paired**          | 270,290 (96.53 %) | 276,312 (98.68 %) | SRR21835896 has better pairing consistency.                                   |
+| **Singletons**               |    603 (0.22 %)   |    122 (0.04 %)   | Fewer unpaired reads in SRR21835896.                                          |
+| **Cross-chromosomal mates**  |         0         |         0         | No evidence of mis-mapped pairs.                                              |
+
 3. How many primary alignments does each of your BAM files contain?
 4. What coordinate has the largest observed coverage (hint samtools depth)
 5. Select a gene of interest. How many alignments on a forward strand cover the gene?
