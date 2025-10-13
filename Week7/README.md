@@ -78,7 +78,10 @@ The Makefile generates the following organized directory structure:
 # Week 7 Assignment Questions
 
 1. Briefly describe the differences between the alignment in both files.
-2. Briefly compare the statistics for the two BAM files.
+   
+
+  
+3. Briefly compare the statistics for the two BAM files.
 
 | Metric                       |  **SRR34850871**  |  **SRR21835896**  | **Interpretation**                                                            |
 | :--------------------------- | :---------------: | :---------------: | :---------------------------------------------------------------------------- |
@@ -111,4 +114,4 @@ samtools depth alignments/SRR34850871.sorted.bam | sort -k3,3nr | head -1
 | **SRR21835896** | NC_007795.1 | 2,447,431 |  **27,688×** |
 | **SRR34850871** | NC_007795.1 |  788,475  |  **20,752×** |
 
-6. Select a gene of interest. How many alignments on a forward strand cover the gene?
+5. Select a gene of interest. How many alignments on a forward strand cover the gene?
