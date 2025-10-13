@@ -101,6 +101,7 @@ samtools depth alignments/SRR34850871.sorted.bam | sort -k3,3nr | head -1
 ```
 
 - **Results**
+  
 | Sample          |  Chromosome |  Position | Max Coverage |
 | :-------------- | :---------: | :-------: | :----------: |
 | **SRR21835896** | NC_007795.1 | 2,447,431 |  **27,688×** |
