@@ -69,7 +69,7 @@ The Makefile generates the following organized directory structure:
     └── SRR34850871.bw               # BigWig coverage track
 ```
 
-## IGV Screenshots
+## IGV Screenshots (https://igv.org/app/)
 
 <img width="2922" height="1782" alt="S_aureus2_igv-app" src="https://github.com/user-attachments/assets/3260e866-2608-484b-a58a-540b08a2da7f" />
 
