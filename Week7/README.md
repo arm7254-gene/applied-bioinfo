@@ -1,6 +1,6 @@
 # Week  Assignment: Write a reusable alignment Makefile
 
-# Week 7 Command Log for MakeFile
+# Week 7 Command Log for Makefile
 
 Datasets:
 | Source                  | Platform              | SRR Accession |
@@ -69,12 +69,45 @@ The Makefile generates the following organized directory structure:
     └── SRR34850871.bw               # BigWig coverage track
 ```
 
-# Week 7 Assignment Questions
-
 ## IGV Screenshots
+
+<img width="2922" height="1562" alt="S aureus_igv-app" src="https://github.com/user-attachments/assets/613b100f-202c-43f6-a9a5-a279f7120be2" />
+
+
+# Week 7 Assignment Questions
 
 1. Briefly describe the differences between the alignment in both files.
 2. Briefly compare the statistics for the two BAM files.
+
+| Metric                       |  **SRR34850871**  |  **SRR21835896**  | **Interpretation**                                                            |
+| :--------------------------- | :---------------: | :---------------: | :---------------------------------------------------------------------------- |
+| **Total reads**              |      281,631      |      280,163      | Nearly identical total input reads.                                           |
+| **Primary alignments**       |      280,000      |      280,000      | Both are paired-end, 140k read pairs each.                                    |
+| **Supplementary alignments** |       1,631       |        163        | SRR34850871 has ~10× more supplementary alignments (chimeric or split reads). |
+| **Duplicates**               |         0         |         0         | No PCR duplication detected — good.                                           |
+| **Mapped reads**             | 274,696 (97.54 %) | 277,401 (99.01 %) | Slightly higher mapping rate for SRR21835896.                                 |
+| **Properly paired**          | 270,290 (96.53 %) | 276,312 (98.68 %) | SRR21835896 has better pairing consistency.                                   |
+| **Singletons**               |    603 (0.22 %)   |    122 (0.04 %)   | Fewer unpaired reads in SRR21835896.                                          |
+| **Cross-chromosomal mates**  |         0         |         0         | No evidence of mis-mapped pairs.                                              |
+
 3. How many primary alignments does each of your BAM files contain?
+   - Both BAM files contain 280,000 primary alignments, corresponding to 140,000 read pairs each (since these are paired-end RNA-seq reads).
 4. What coordinate has the largest observed coverage (hint samtools depth)
-5. Select a gene of interest. How many alignments on a forward strand cover the gene?
+
+- **SRR21835896**
+```bash
+samtools depth alignments/SRR21835896.sorted.bam | sort -k3,3nr | head -1
+```
+- **SRR34850871**
+```bash
+samtools depth alignments/SRR34850871.sorted.bam | sort -k3,3nr | head -1
+```
+
+- **Results**
+  
+| Sample          |  Chromosome |  Position | Max Coverage |
+| :-------------- | :---------: | :-------: | :----------: |
+| **SRR21835896** | NC_007795.1 | 2,447,431 |  **27,688×** |
+| **SRR34850871** | NC_007795.1 |  788,475  |  **20,752×** |
+
+6. Select a gene of interest. How many alignments on a forward strand cover the gene?
