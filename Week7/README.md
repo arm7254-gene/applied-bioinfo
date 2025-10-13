@@ -71,9 +71,8 @@ The Makefile generates the following organized directory structure:
 
 ## IGV Screenshots
 
-⚠️ IGV Troubleshooting Notice
+<img width="2922" height="1562" alt="S aureus_igv-app" src="https://github.com/user-attachments/assets/613b100f-202c-43f6-a9a5-a279f7120be2" />
 
-Notice: I am currently troubleshooting loading the S. aureus USA300 reference genome and aligned BAM files in IGV. Some genome or BAM files may not display correctly until this issue is resolved. Please refer back later for updated instructions and fully visualizable data.
 
 # Week 7 Assignment Questions
 
