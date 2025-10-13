@@ -115,18 +115,26 @@ $(STATS): $(BAM)
 	@echo "=== Alignment Statistics for $(SRR) ==="
 	@cat $(STATS)
 
+# Path to chromosome sizes file (defined first so Make can see it)
+CHROM_SIZES = $(GENOME_DIR)/$(GENOME_NAME).chrom.sizes
+GENOME_FAI = $(GENOME_FA).fai
+
 # Generate bigWig coverage track
 bigwig: $(BIGWIG)
 
-$(BIGWIG): $(BAM) $(BAM_INDEX) $(GENOME_FAI)
+$(BIGWIG): $(BAM) $(BAM_INDEX) $(CHROM_SIZES)
 	# Convert BAM to bedGraph (sorted)
 	bedtools genomecov -ibam $(BAM) -bg | sort -k1,1 -k2,2n > $(ALIGN_DIR)/$(SRR).bedGraph
 	# Convert bedGraph to bigWig
-	bedGraphToBigWig $(ALIGN_DIR)/$(SRR).bedGraph $(GENOME_FAI) $(BIGWIG)
+	bedGraphToBigWig $(ALIGN_DIR)/$(SRR).bedGraph $(CHROM_SIZES) $(BIGWIG)
 	# Clean up intermediate file
 	rm $(ALIGN_DIR)/$(SRR).bedGraph
 
-# Index reference genome (needed for bigWig)
+# Create chromosome sizes file from FASTA index
+$(CHROM_SIZES): $(GENOME_FAI)
+	cut -f1,2 $(GENOME_FAI) > $(CHROM_SIZES)
+
+# Index reference genome (needed for bigWig and chrom.sizes)
 $(GENOME_FAI): $(GENOME_FA)
 	samtools faidx $(GENOME_FA)
 
