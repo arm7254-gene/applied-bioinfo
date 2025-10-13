@@ -69,9 +69,13 @@ The Makefile generates the following organized directory structure:
     └── SRR34850871.bw               # BigWig coverage track
 ```
 
-# Week 7 Assignment Questions
-
 ## IGV Screenshots
+
+⚠️ IGV Troubleshooting Notice
+
+Notice: I am currently troubleshooting loading the S. aureus USA300 reference genome and aligned BAM files in IGV. Some genome or BAM files may not display correctly until this issue is resolved. Please refer back later for updated instructions and fully visualizable data.
+
+# Week 7 Assignment Questions
 
 1. Briefly describe the differences between the alignment in both files.
 2. Briefly compare the statistics for the two BAM files.
