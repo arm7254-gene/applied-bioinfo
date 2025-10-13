@@ -90,4 +90,20 @@ The Makefile generates the following organized directory structure:
 3. How many primary alignments does each of your BAM files contain?
    - Both BAM files contain 280,000 primary alignments, corresponding to 140,000 read pairs each (since these are paired-end RNA-seq reads).
 4. What coordinate has the largest observed coverage (hint samtools depth)
-5. Select a gene of interest. How many alignments on a forward strand cover the gene?
+
+- **SRR21835896**
+```bash
+samtools depth alignments/SRR21835896.sorted.bam | sort -k3,3nr | head -1
+```
+- **SRR34850871**
+```bash
+samtools depth alignments/SRR34850871.sorted.bam | sort -k3,3nr | head -1
+```
+
+- **Results**
+| Sample          |  Chromosome |  Position | Max Coverage |
+| :-------------- | :---------: | :-------: | :----------: |
+| **SRR21835896** | NC_007795.1 | 2,447,431 |  **27,688×** |
+| **SRR34850871** | NC_007795.1 |  788,475  |  **20,752×** |
+
+6. Select a gene of interest. How many alignments on a forward strand cover the gene?
