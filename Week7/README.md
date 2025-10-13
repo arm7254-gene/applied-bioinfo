@@ -79,6 +79,15 @@ The Makefile generates the following organized directory structure:
 
 1. Briefly describe the differences between the alignment in both files.
    
+| Metric                       | **SRR34850871**               | **SRR21835896**                 | **Difference / Interpretation**                                                                                                            |
+| :--------------------------- | :---------------------------- | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Total reads**              | 281,631                       | 280,163                         | Nearly identical total read counts.                                                                                                        |
+| **Primary alignments**       | 280,000                       | 280,000                         | Same number of primary alignments.                                                                                                         |
+| **Supplementary alignments** | 1,631                         | 163                             | SRR34850871 has more supplementary alignments — possibly more split reads or chimeric mappings.                                            |
+| **Mapped reads (%)**         | 97.54%                        | 99.01%                          | SRR21835896 shows slightly higher mapping quality and fewer unmapped reads.                                                                |
+| **Properly paired (%)**      | 96.53%                        | 98.68%                          | SRR21835896 has more properly paired reads — suggesting cleaner library prep or better sequencing consistency.                             |
+| **Singletons**               | 603                           | 122                             | SRR34850871 has more singletons (reads whose mate did not map), again suggesting slightly lower data quality or more fragmented alignment. |
+| **Max coverage coordinate**  | NC_007795.1:788,475 (20,752×) | NC_007795.1:2,447,431 (27,688×) | SRR21835896 reaches higher peak coverage, indicating deeper sequencing or local amplification bias.                                        |
 
   
 3. Briefly compare the statistics for the two BAM files.
