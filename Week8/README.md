@@ -51,3 +51,13 @@ make stats
 make bigwig
 ```
 
+## Step 8: Clean Up
+Remove all generated files:
+```bash
+make clean
+```
+Or remove only alignment files but keep genome and reads:
+```bash
+make clean-align
+```
+
