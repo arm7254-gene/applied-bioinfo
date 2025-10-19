@@ -1,1 +1,1 @@
-# Week 8 Assignment
+# Week 8 Assignment: Automate a large scale analysis
