@@ -60,4 +60,23 @@ Or remove only alignment files but keep genome and reads:
 ```bash
 make clean-align
 ```
+## Example of a Dry-Run Test
+To verify that GNU parallel is reading the design file correctly:
+```bash
+cat design.csv | \
+parallel --colsep , --header : --lb -j 4 \
+         echo "Would process sample {Sample} from SRR {Run}"
+```
+Example output:
+```bash
+Would process sample SRS15348643 from SRR SRR21835900
+Would process sample SRS15348644 from SRR SRR21835899
+Would process sample SRS15348645 from SRR SRR21835898
+Would process sample SRS15348646 from SRR SRR21835897
+Would process sample SRS15348647 from SRR SRR21835896
+Would process sample SRS15348642 from SRR SRR21835901
+```
+* Confirms that each row in design.csv will be processed in parallel.
+  
+
 
