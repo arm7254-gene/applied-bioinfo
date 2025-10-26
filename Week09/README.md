@@ -12,70 +12,65 @@ Datasets:
 |                         | Treatment Replicate 2 |  SRS15348643  | SRR21835900   |
 |                         | Treatment Replicate 3 |  SRS15348644  | SRR21835899   |
 
-## Step 1: Download and Prepare Genome
+# Initial Setup
+
+## Step 1: Download reference genome and create index (once)
 ```bash
-# Download genome and annotation
+# Downloads S. aureus USA300 genome and annotation
 make genome
 
-# Index the genome for BWA and samtools
+# Creates BWA index and chromosome sizes
 make index
 ```
 
-## Step 2: Download Metadata / Design File
+## Step 2: Get sample metadata (once)
 ```bash
+# Downloads SRA metadata to metadata/design.csv
 make metadata
 ```
 
-## Step 3: Download FASTQ Reads (renamed by Sample)
+## Step 3: Create your design file
+Note: Create design.csv in the project root with samples you want to process:
 ```bash
-make fastq
+Run,Sample
+SRR21835896,SRS15348647
+SRR21835897,SRS15348648
+SRR21835898,SRS15348649
 ```
 
-## Step 4: Run FASTQC for Quality Control
+# Single Sample Processing
+Process one sample at a time by specifying variables:
+
 ```bash
-make fastqc
+# Download FASTQ for one sample
+make fastq SAMPLE=SRS15348647 SRR=SRR21835896
+
+# Run quality control
+make fastqc SAMPLE=SRS15348647
+
+# Align to reference genome
+make align SAMPLE=SRS15348647
+
+# Generate alignment statistics
+make stats SAMPLE=SRS15348647
+
+# Create coverage track
+make bigwig SAMPLE=SRS15348647
 ```
 
-## Step 5: Align Reads to Reference Genome
-```bash
-make align
-```
+# Batch Processing (All Samples)
+Use Looper.mk to process all samples in design.csv:
 
-## Step 6: Generate Alignment Statistics
 ```bash
-make stats
-```
+# Run complete pipeline on all samples
+make -f Looper.mk all
 
-## Step 7: Generate Coverage Tracks (bigWig)
-```bash
-make bigwig
+# Or run individual stages on all samples:
+make -f Looper.mk fastq      # Download all FASTQ files
+make -f Looper.mk fastqc     # QC all samples
+make -f Looper.mk align      # Align all samples
+make -f Looper.mk stats      # Stats for all samples
+make -f Looper.mk bigwig     # Coverage for all samples
 ```
-
-## Step 8: Clean Up
-Remove all generated files:
-```bash
-make clean
-```
-Or remove only alignment files but keep genome and reads:
-```bash
-make clean-align
-```
-## Example of a Dry-Run Test
-To verify that GNU parallel is reading the design file correctly:
-```bash
-cat design.csv | \
-parallel --colsep , --header : --lb -j 4 \
-         echo "Would process sample {Sample} from SRR {Run}"
-```
-Example output:
-```bash
-Would process sample SRS15348643 from SRR SRR21835900
-Would process sample SRS15348644 from SRR SRR21835899
-Would process sample SRS15348645 from SRR SRR21835898
-Would process sample SRS15348646 from SRR SRR21835897
-Would process sample SRS15348647 from SRR SRR21835896
-Would process sample SRS15348642 from SRR SRR21835901
-```
-* Confirms that each row in design.csv will be processed in parallel.
   
 
