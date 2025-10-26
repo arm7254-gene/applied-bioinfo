@@ -72,5 +72,25 @@ make -f Looper.mk align      # Align all samples
 make -f Looper.mk stats      # Stats for all samples
 make -f Looper.mk bigwig     # Coverage for all samples
 ```
+By default, 4 samples are processed in parallel. Adjust in Looper.mk by changing JOBS = 4.
+
+# Output Structure
+```bash
+.
+├── genome/                    # Reference genome and annotation
+├── reads/                     # FASTQ files (named by Sample ID)
+├── alignments/                # BAM files, stats, and bigWig tracks
+├── fastqc_reports/            # Quality control reports
+└── metadata/                  # Downloaded SRA metadata
+```
+
+# Cleanup
+```bash
+# Remove all generated files
+make clean
+
+# Remove only alignment files
+make clean-align
+```
   
 
