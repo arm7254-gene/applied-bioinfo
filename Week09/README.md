@@ -59,6 +59,8 @@ make bigwig SAMPLE=SRS15348647
 ```
 
 # Batch Processing (All Samples)
+
+## Option 1: Using Looper.mk (Recommended)
 Use Looper.mk to process all samples in design.csv:
 
 ```bash
@@ -73,6 +75,31 @@ make -f Looper.mk stats      # Stats for all samples
 make -f Looper.mk bigwig     # Coverage for all samples
 ```
 By default, 4 samples are processed in parallel. Adjust in Looper.mk by changing JOBS = 4.
+
+## Option 2: Direct parallel processing from command line
+You can also process multiple samples directly using GNU parallel with your design.csv:
+```bash
+# Download FASTQ for all samples (4 jobs in parallel)
+cat design.csv | parallel --colsep , --header : -j 4 \
+    make fastq SRR={Run} SAMPLE={Sample}
+
+# Align all samples
+cat design.csv | parallel --colsep , --header : -j 4 \
+    make align SAMPLE={Sample}
+
+# Run FASTQC on all samples
+cat design.csv | parallel --colsep , --header : -j 4 \
+    make fastqc SAMPLE={Sample}
+
+# Generate stats for all samples
+cat design.csv | parallel --colsep , --header : -j 4 \
+    make stats SAMPLE={Sample}
+
+# Create bigWig tracks for all samples
+cat design.csv | parallel --colsep , --header : -j 4 \
+    make bigwig SAMPLE={Sample}
+```
+Note: Adjust -j 4 to control the number of parallel jobs based on your system resources.
 
 # Output Structure
 ```bash
