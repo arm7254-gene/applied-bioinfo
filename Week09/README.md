@@ -30,12 +30,29 @@ make metadata
 ```
 
 ## Step 3: Create your design file
-Note: Create design.csv in the project root with samples you want to process:
+
+Note: Create design.csv in the project root (same directory as the Makefile) with the samples you want to process.
+
+### Option A: Copy from metadata (recommended)
+After running make metadata, you can copy the entire metadata/design.csv to your project root:
 ```bash
+cp metadata/design.csv design.csv
+```
+Or copy just specific samples you want:
+```bash
+# Copy header and first 3 samples
+head -n 4 metadata/design.csv > design.csv
+```
+### Option B: Create manually
+Create a new file called design.csv with this format:
+
+```bash
+cat > design.csv <<EOF
 Run,Sample
 SRR21835896,SRS15348647
 SRR21835897,SRS15348648
 SRR21835898,SRS15348649
+EOF
 ```
 
 # Single Sample Processing
