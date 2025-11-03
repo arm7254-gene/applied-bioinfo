@@ -140,6 +140,7 @@ Note: Adjust -j 4 to control the number of parallel jobs based on your system re
 ├── reads/                     # FASTQ files (named by Sample ID)
 ├── alignments/                # BAM files, stats, and bigWig tracks
 ├── fastqc_reports/            # Quality control reports
+├── variants/                  # VCF files and variant statistics
 └── metadata/                  # Downloaded SRA metadata
 ```
 ## Step 4: Variant Calling
@@ -155,8 +156,24 @@ This will generate:
 * variants/SAMPLE.vcf.gz.tbi - VCF index file
 * variants/SAMPLE.vcf.stats.txt - Variant statistics
 
+## Creating a Multisample VCF
+After calling variants for all samples, merge them into a single multisample VCF:
+```bash
+# First, call variants for all samples
+make -f Looper.mk vcf
+
+# Then merge into multisample VCF
+make merge-vcf
+```
+This creates:
+* variants/all_samples.vcf.gz - Multisample VCF with all samples
+* variants/all_samples.vcf.gz.tbi - Index file
+* variants/all_samples.vcf.stats.txt - Combined statistics
+
 ## Step 5: Visualizing Variants
 To visualize variants alongside alignments, you can use IGV (Integrative Genomics Viewer):
+
+### For single sample:
 ```bash
 # Load these files into IGV:
 # 1. Reference genome: genome/S_aureus_USA300.fna
@@ -165,19 +182,39 @@ To visualize variants alongside alignments, you can use IGV (Integrative Genomic
 # 4. Coverage track: alignments/SAMPLE.bw
 # 5. Variants: variants/SAMPLE.vcf.gz
 ```
-Or use command-line tools:
+### For multisample VCF:
+```bash
+# Load these files into IGV:
+# 1. Reference genome: genome/S_aureus_USA300.fna
+# 2. Gene annotation: genome/S_aureus_USA300.gff
+# 3. Multisample VCF: variants/all_samples.vcf.gz
+# 4. BAM files for all samples (optional, to see coverage)
+```
+
+### Or use command-line tools:
 ```bash
 # View variants in a specific region
-bcftools view variants/SRS15348647.vcf.gz NC_007793.1:100000-110000
+bcftools view variants/all_samples.vcf.gz NC_007793.1:100000-110000
 
 # Count total variants
-bcftools view -H variants/SRS15348647.vcf.gz | wc -l
+bcftools view -H variants/all_samples.vcf.gz | wc -l
+
+# View variants in a specific gene (requires bedtools)
+# First, extract gene coordinates from GFF
+grep "gene" genome/S_aureus_USA300.gff | head -1
+# Then query that region in the VCF
 
 # Extract only SNPs
-bcftools view -v snps variants/SRS15348647.vcf.gz -Oz -o variants/SRS15348647.snps.vcf.gz
+bcftools view -v snps variants/all_samples.vcf.gz -Oz -o variants/all_samples.snps.vcf.gz
 
 # Extract only indels
-bcftools view -v indels variants/SRS15348647.vcf.gz -Oz -o variants/SRS15348647.indels.vcf.gz
+bcftools view -v indels variants/all_samples.vcf.gz -Oz -o variants/all_samples.indels.vcf.gz
+
+# Find variants present in all samples
+bcftools view -i 'AC==AN' variants/all_samples.vcf.gz
+
+# Find sample-specific variants
+bcftools view -i 'AC==2' variants/all_samples.vcf.gz  # Variants in one sample only
 ```
 
 ## Cleanup
@@ -205,8 +242,21 @@ make vcf SAMPLE=SRS15348647
 # 4. View variant results
 cat variants/SRS15348647.vcf.stats.txt
 
-# 5. If everything works, process all samples
+# 5. Process all samples
 make -f Looper.mk all
+
+# 6. Check sample quality (alignment stats and variant counts)
+for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
+    echo "=== $sample ==="
+    grep "mapped (" alignments/${sample}.stats.txt
+    echo "Variants:" $(bcftools view -H variants/${sample}.vcf.gz | wc -l)
+    echo ""
+done
+
+# 7. If all samples look good, create multisample VCF
+make merge-vcf
+
+# 8. Visualize in IGV with genome, GFF, and all_samples.vcf.gz
 ```
 
 
