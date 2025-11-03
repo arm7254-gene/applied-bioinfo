@@ -13,6 +13,7 @@
 #   make -f Looper.mk stats            # Generate stats for all
 #   make -f Looper.mk bigwig           # Generate bigWigs for all
 #   make -f Looper.mk vcf              # Call variants for all
+#   make -f Looper.mk merge-vcf        # Merge all VCFs into multisample VCF
 # ============================================================
 
 DESIGN_FILE = design.csv
@@ -20,7 +21,7 @@ JOBS = 4
 
 # ========== Batch targets ==========
 
-all: fastq fastqc align stats bigwig vcf
+all: fastq fastqc align stats bigwig vcf merge-vcf
 	@echo "=== Pipeline complete for all samples ==="
 
 # Download FASTQ files for all samples
@@ -65,4 +66,9 @@ vcf:
 	parallel --colsep , --header : --lb -j $(JOBS) \
 		make vcf SAMPLE={Sample}
 
-.PHONY: all fastq fastqc align stats bigwig vcf
+# Merge all sample VCFs into multisample VCF
+merge-vcf:
+	@echo "=== Merging all VCFs into multisample VCF ==="
+	make merge-vcf
+
+.PHONY: all fastq fastqc align stats bigwig vcf merge-vcf
