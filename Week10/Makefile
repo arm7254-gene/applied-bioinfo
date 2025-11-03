@@ -14,6 +14,7 @@
 #   make align SAMPLE=...            # Align one sample
 #   make stats SAMPLE=...            # Generate alignment stats for one sample
 #   make bigwig SAMPLE=...           # Create coverage bigWig for one sample
+#   make vcf SAMPLE=...              # Call variants for one sample
 #
 # See Looper.mk for batch processing all samples
 # ============================================================
@@ -34,6 +35,7 @@ READS_DIR = reads
 ALIGN_DIR = alignments
 FASTQC_DIR = fastqc_reports
 META_DIR = metadata
+VCF_DIR = variants
 
 DESIGN_FILE = design.csv                    # Top-level design file (user creates)
 META_DESIGN = $(META_DIR)/design.csv        # Downloaded metadata design file
@@ -59,6 +61,12 @@ BAM_INDEX = $(BAM).bai
 STATS = $(ALIGN_DIR)/$(SAMPLE).stats.txt
 BIGWIG = $(ALIGN_DIR)/$(SAMPLE).bw
 
+# Variant calling files
+RAW_VCF = $(VCF_DIR)/$(SAMPLE).raw.vcf.gz
+FILTERED_VCF = $(VCF_DIR)/$(SAMPLE).vcf.gz
+VCF_INDEX = $(FILTERED_VCF).tbi
+VCF_STATS = $(VCF_DIR)/$(SAMPLE).vcf.stats.txt
+
 # ========== RULES ==========
 
 # ========== Usage (first target - default) ==========
@@ -78,6 +86,7 @@ usage:
 	@echo "  make align SAMPLE=SRS15348647"
 	@echo "  make stats SAMPLE=SRS15348647"
 	@echo "  make bigwig SAMPLE=SRS15348647"
+	@echo "  make vcf SAMPLE=SRS15348647"
 	@echo ""
 	@echo "Batch processing:"
 	@echo "  See Looper.mk for processing all samples"
@@ -195,11 +204,48 @@ $(BIGWIG): $(BAM) $(BAM_INDEX) $(CHROM_SIZES)
 	bedGraphToBigWig $(ALIGN_DIR)/$(SAMPLE).bedGraph $(CHROM_SIZES) $(BIGWIG)
 	rm $(ALIGN_DIR)/$(SAMPLE).bedGraph
 
+# ========== Variant calling (single sample) ==========
+vcf: $(FILTERED_VCF) $(VCF_INDEX) $(VCF_STATS)
+
+# Step 1: Call raw variants with bcftools mpileup + call
+$(RAW_VCF): $(BAM) $(BAM_INDEX) $(GENOME_FA) $(GENOME_FAI)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		echo "Example: make vcf SAMPLE=SRS15348647"; \
+		exit 1; \
+	fi
+	mkdir -p $(VCF_DIR)
+	@echo "=== Calling variants for $(SAMPLE) ==="
+	bcftools mpileup -Ou -f $(GENOME_FA) $(BAM) | \
+	bcftools call -mv -Oz -o $(RAW_VCF)
+
+# Step 2: Filter variants (quality >= 20, depth >= 10)
+$(FILTERED_VCF): $(RAW_VCF)
+	@echo "=== Filtering variants for $(SAMPLE) ==="
+	bcftools filter -i 'QUAL>=20 && DP>=10' -Oz -o $(FILTERED_VCF) $(RAW_VCF)
+
+# Step 3: Index the filtered VCF
+$(VCF_INDEX): $(FILTERED_VCF)
+	bcftools index -t $(FILTERED_VCF)
+
+# Step 4: Generate VCF statistics
+$(VCF_STATS): $(FILTERED_VCF)
+	@echo "=== Generating variant statistics for $(SAMPLE) ==="
+	bcftools stats $(FILTERED_VCF) > $(VCF_STATS)
+	@echo ""
+	@echo "=== Variant Summary for $(SAMPLE) ==="
+	@grep "^SN" $(VCF_STATS) | cut -f2-
+	@echo ""
+	@echo "Full statistics saved to: $(VCF_STATS)"
+
 # ========== Clean files ==========
 clean:
-	rm -rf $(GENOME_DIR) $(READS_DIR) $(ALIGN_DIR) $(FASTQC_DIR) $(META_DIR)
+	rm -rf $(GENOME_DIR) $(READS_DIR) $(ALIGN_DIR) $(FASTQC_DIR) $(META_DIR) $(VCF_DIR)
 
 clean-align:
 	rm -rf $(ALIGN_DIR)
 
-.PHONY: usage genome metadata fastq fastqc index align stats bigwig clean clean-align
+clean-vcf:
+	rm -rf $(VCF_DIR)
+
+.PHONY: usage genome metadata fastq fastqc index align stats bigwig vcf clean clean-align clean-vcf
