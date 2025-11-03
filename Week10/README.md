@@ -133,3 +133,82 @@ cat design.csv | parallel --colsep , --header : -j 4 \
 ```
 Note: Adjust -j 4 to control the number of parallel jobs based on your system resources.
 
+# Output Structure
+```bash
+.
+├── genome/                    # Reference genome and annotation
+├── reads/                     # FASTQ files (named by Sample ID)
+├── alignments/                # BAM files, stats, and bigWig tracks
+├── fastqc_reports/            # Quality control reports
+└── metadata/                  # Downloaded SRA metadata
+```
+## Step 4: Variant Calling
+
+## Single Sample Processing
+```bash
+# Call variants for one sample (requires existing BAM file)
+make vcf SAMPLE=SRS15348647
+```
+This will generate:
+* variants/SAMPLE.raw.vcf.gz - Raw variant calls
+* variants/SAMPLE.vcf.gz - Filtered variants (QUAL≥20, DP≥10)
+* variants/SAMPLE.vcf.gz.tbi - VCF index file
+* variants/SAMPLE.vcf.stats.txt - Variant statistics
+
+## Step 5: Visualizing Variants
+To visualize variants alongside alignments, you can use IGV (Integrative Genomics Viewer):
+```bash
+# Load these files into IGV:
+# 1. Reference genome: genome/S_aureus_USA300.fna
+# 2. Gene annotation: genome/S_aureus_USA300.gff
+# 3. BAM alignment: alignments/SAMPLE.sorted.bam
+# 4. Coverage track: alignments/SAMPLE.bw
+# 5. Variants: variants/SAMPLE.vcf.gz
+```
+Or use command-line tools:
+```bash
+# View variants in a specific region
+bcftools view variants/SRS15348647.vcf.gz NC_007793.1:100000-110000
+
+# Count total variants
+bcftools view -H variants/SRS15348647.vcf.gz | wc -l
+
+# Extract only SNPs
+bcftools view -v snps variants/SRS15348647.vcf.gz -Oz -o variants/SRS15348647.snps.vcf.gz
+
+# Extract only indels
+bcftools view -v indels variants/SRS15348647.vcf.gz -Oz -o variants/SRS15348647.indels.vcf.gz
+```
+
+## Cleanup
+```bash
+make clean              # Remove all generated files
+make clean-align        # Remove only alignment files
+make clean-vcf          # Remove only variant files
+```
+
+## Example Workflow
+```bash
+# 1. Initial setup (once)
+make genome
+make index
+make metadata
+
+# 2. Create your design.csv with samples to process
+
+# 3. Test with one sample
+make fastq SAMPLE=SRS15348647 SRR=SRR21835896
+make align SAMPLE=SRS15348647
+make stats SAMPLE=SRS15348647
+make vcf SAMPLE=SRS15348647
+
+# 4. View variant results
+cat variants/SRS15348647.vcf.stats.txt
+
+# 5. If everything works, process all samples
+make -f Looper.mk all
+```
+
+
+
+
