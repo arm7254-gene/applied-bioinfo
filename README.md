@@ -27,11 +27,17 @@ Write a reusable alignment Makefile
 Automate a large scale analysis
 
 ## Week 09
-TBD
+Revising and Improving Your Automation Code
 
 ## Week 10
-TBD
+Generate a multisample variant call file (VCF)
 
 ## Week 11
+TBD
+
+## Week 12
+TBD
+
+## Week 13
 TBD
 
