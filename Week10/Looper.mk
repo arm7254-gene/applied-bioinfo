@@ -12,6 +12,7 @@
 #   make -f Looper.mk align            # Align all samples
 #   make -f Looper.mk stats            # Generate stats for all
 #   make -f Looper.mk bigwig           # Generate bigWigs for all
+#   make -f Looper.mk vcf              # Call variants for all
 # ============================================================
 
 DESIGN_FILE = design.csv
@@ -19,7 +20,7 @@ JOBS = 4
 
 # ========== Batch targets ==========
 
-all: fastq fastqc align stats bigwig
+all: fastq fastqc align stats bigwig vcf
 	@echo "=== Pipeline complete for all samples ==="
 
 # Download FASTQ files for all samples
@@ -57,4 +58,11 @@ bigwig:
 	parallel --colsep , --header : --lb -j $(JOBS) \
 		make bigwig SAMPLE={Sample}
 
-.PHONY: all fastq fastqc align stats bigwig
+# Call variants for all samples
+vcf:
+	@echo "=== Calling variants for all samples ==="
+	cat $(DESIGN_FILE) | \
+	parallel --colsep , --header : --lb -j $(JOBS) \
+		make vcf SAMPLE={Sample}
+
+.PHONY: all fastq fastqc align stats bigwig vcf
