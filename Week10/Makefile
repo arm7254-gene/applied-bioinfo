@@ -67,6 +67,11 @@ FILTERED_VCF = $(VCF_DIR)/$(SAMPLE).vcf.gz
 VCF_INDEX = $(FILTERED_VCF).tbi
 VCF_STATS = $(VCF_DIR)/$(SAMPLE).vcf.stats.txt
 
+# Multisample VCF
+MULTISAMPLE_VCF = $(VCF_DIR)/all_samples.vcf.gz
+MULTISAMPLE_INDEX = $(MULTISAMPLE_VCF).tbi
+MULTISAMPLE_STATS = $(VCF_DIR)/all_samples.vcf.stats.txt
+
 # ========== RULES ==========
 
 # ========== Usage (first target - default) ==========
@@ -87,6 +92,9 @@ usage:
 	@echo "  make stats SAMPLE=SRS15348647"
 	@echo "  make bigwig SAMPLE=SRS15348647"
 	@echo "  make vcf SAMPLE=SRS15348647"
+	@echo ""
+	@echo "Multisample analysis:"
+	@echo "  make merge-vcf       Merge all sample VCFs into multisample VCF"
 	@echo ""
 	@echo "Batch processing:"
 	@echo "  See Looper.mk for processing all samples"
@@ -238,6 +246,39 @@ $(VCF_STATS): $(FILTERED_VCF)
 	@echo ""
 	@echo "Full statistics saved to: $(VCF_STATS)"
 
+# ========== Merge VCFs into multisample VCF ==========
+merge-vcf: $(MULTISAMPLE_VCF) $(MULTISAMPLE_INDEX) $(MULTISAMPLE_STATS)
+
+$(MULTISAMPLE_VCF): $(DESIGN_FILE)
+	@echo "=== Merging individual VCFs into multisample VCF ==="
+	@# Check that all individual VCFs exist
+	@for sample in $(tail -n +2 $(DESIGN_FILE) | cut -d',' -f2); do \
+		if [ ! -f $(VCF_DIR)/$sample.vcf.gz ]; then \
+			echo "Error: VCF file $(VCF_DIR)/$sample.vcf.gz not found"; \
+			echo "Run 'make -f Looper.mk vcf' first to generate all sample VCFs"; \
+			exit 1; \
+		fi; \
+	done
+	@# Create list of VCF files to merge
+	@tail -n +2 $(DESIGN_FILE) | cut -d',' -f2 | \
+		awk '{print "$(VCF_DIR)/" $1 ".vcf.gz"}' > $(VCF_DIR)/vcf_list.txt
+	@# Merge VCFs
+	bcftools merge -l $(VCF_DIR)/vcf_list.txt -Oz -o $(MULTISAMPLE_VCF)
+	@rm $(VCF_DIR)/vcf_list.txt
+	@echo "=== Multisample VCF created: $(MULTISAMPLE_VCF) ==="
+
+$(MULTISAMPLE_INDEX): $(MULTISAMPLE_VCF)
+	bcftools index -t $(MULTISAMPLE_VCF)
+
+$(MULTISAMPLE_STATS): $(MULTISAMPLE_VCF)
+	@echo "=== Generating multisample variant statistics ==="
+	bcftools stats $(MULTISAMPLE_VCF) > $(MULTISAMPLE_STATS)
+	@echo ""
+	@echo "=== Multisample Variant Summary ==="
+	@grep "^SN" $(MULTISAMPLE_STATS) | cut -f2-
+	@echo ""
+	@echo "Full statistics saved to: $(MULTISAMPLE_STATS)"
+
 # ========== Clean files ==========
 clean:
 	rm -rf $(GENOME_DIR) $(READS_DIR) $(ALIGN_DIR) $(FASTQC_DIR) $(META_DIR) $(VCF_DIR)
@@ -248,4 +289,4 @@ clean-align:
 clean-vcf:
 	rm -rf $(VCF_DIR)
 
-.PHONY: usage genome metadata fastq fastqc index align stats bigwig vcf clean clean-align clean-vcf
+.PHONY: usage genome metadata fastq fastqc index align stats bigwig vcf merge-vcf clean clean-align clean-vcf
