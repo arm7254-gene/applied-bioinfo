@@ -261,7 +261,7 @@ $(MULTISAMPLE_VCF): $(DESIGN_FILE)
 	done
 	@# Create list of VCF files to merge
 	@tail -n +2 $(DESIGN_FILE) | cut -d',' -f2 | \
-		awk '{print "$(VCF_DIR)/" $1 ".vcf.gz"}' > $(VCF_DIR)/vcf_list.txt
+		awk '{print "$(VCF_DIR)/" $$1 ".vcf.gz"}' > $(VCF_DIR)/vcf_list.txt
 	@# Merge VCFs
 	bcftools merge -l $(VCF_DIR)/vcf_list.txt -Oz -o $(MULTISAMPLE_VCF)
 	@rm $(VCF_DIR)/vcf_list.txt
