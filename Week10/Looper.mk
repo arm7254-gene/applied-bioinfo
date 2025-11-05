@@ -13,7 +13,6 @@
 #   make -f Looper.mk stats            # Generate stats for all
 #   make -f Looper.mk bigwig           # Generate bigWigs for all
 #   make -f Looper.mk vcf              # Call variants for all
-#   make -f Looper.mk merge-vcf        # Merge all VCFs into multisample VCF
 # ============================================================
 
 DESIGN_FILE = design.csv
@@ -21,54 +20,35 @@ JOBS = 4
 
 # ========== Batch targets ==========
 
-all: fastq fastqc align stats bigwig vcf merge-vcf
+all: fastq fastqc align stats bigwig vcf
+	make merge-vcf
 	@echo "=== Pipeline complete for all samples ==="
 
-# Download FASTQ files for all samples
 fastq:
-	@echo "=== Downloading FASTQ files for all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make fastq SAMPLE={Sample} SRR={Run}
 
-# Run FASTQC on all samples
 fastqc:
-	@echo "=== Running FASTQC on all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make fastqc SAMPLE={Sample}
 
-# Align all samples
 align:
-	@echo "=== Aligning all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make align SAMPLE={Sample}
 
-# Generate stats for all samples
 stats:
-	@echo "=== Generating alignment statistics for all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make stats SAMPLE={Sample}
 
-# Generate bigWig files for all samples
 bigwig:
-	@echo "=== Generating bigWig files for all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make bigwig SAMPLE={Sample}
 
-# Call variants for all samples
 vcf:
-	@echo "=== Calling variants for all samples ==="
-	cat $(DESIGN_FILE) | \
-	parallel --colsep , --header : --lb -j $(JOBS) \
+	cat $(DESIGN_FILE) | parallel --colsep , --header : --lb -j $(JOBS) \
 		make vcf SAMPLE={Sample}
 
-# Merge all sample VCFs into multisample VCF
 merge-vcf:
-	@echo "=== Merging all VCFs into multisample VCF ==="
 	make merge-vcf
 
 .PHONY: all fastq fastqc align stats bigwig vcf merge-vcf
