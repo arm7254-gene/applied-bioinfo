@@ -1,6 +1,6 @@
-# Week 10 Assignment: Variant Calling Pipeline
+# Week 11 Assignment: Establish the effects of variants
 
-# Week 10 Command Log for Makefile
+# Week 11 Command Log for Makefile
 
 Datasets:
 | Source                  | Sample Description    | Sample ID     | SRR Accession |
