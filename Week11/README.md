@@ -260,7 +260,28 @@ bcftools view -i 'AC==AN' variants/all_samples.vcf.gz
 # Find sample-specific variants
 bcftools view -i 'AC==2' variants/all_samples.vcf.gz  # Variants in one sample only
 ```
+### Automated IGV visualization:
+First, start IGV and enable the port:
+1. Open IGV
+2. Go to View > Preferences > Advanced
+3. Check "Enable port" (default 60151)
+4. Click OK
+Then use the Makefile to automatically load your data:
+```bash
+# View all samples with genome, GFF, BAMs, and multisample VCF
+make igv
 
+# View a specific sample with BAM, bigWig, and individual VCF
+make igv-sample SAMPLE=SRS15348647
+```
+The IGV targets will automatically:
+* Load the reference genome
+* Load gene annotations (GFF)
+* Load alignment files (BAM)
+* Load coverage tracks (bigWig)
+* Load variant files (VCF)
+* Navigate to the start of the genome
+  
 ## Cleanup
 ```bash
 make clean              # Remove all generated files
