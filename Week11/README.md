@@ -61,7 +61,8 @@ SRR21835897,SRS15348648
 SRR21835898,SRS15348649
 EOF
 ```
-## Single Sample Processing
+## Step 4: Sample Processing
+### Single Sample Processing
 Process one sample at a time by specifying variables:
 
 ```bash
@@ -84,9 +85,9 @@ make bigwig SAMPLE=SRS15348647
 make vcf SAMPLE=SRS15348647
 ```
 
-## Batch Processing (All Samples)
+### Batch Processing (All Samples)
 
-### Option 1: Using Looper.mk (Recommended)
+#### Option 1: Using Looper.mk (Recommended)
 Use Looper.mk to process all samples in design.csv:
 
 ```bash
@@ -103,7 +104,7 @@ make -f Looper.mk vcf        # Call variants for all samples
 ```
 By default, 4 samples are processed in parallel. Adjust in Looper.mk by changing JOBS = 4.
 
-### Option 2: Direct parallel processing from command line
+#### Option 2: Direct parallel processing from command line
 You can also process multiple samples directly using GNU parallel with your design.csv:
 
 ```bash
@@ -143,9 +144,9 @@ Note: Adjust -j 4 to control the number of parallel jobs based on your system re
 ├── variants/                  # VCF files and variant statistics
 └── metadata/                  # Downloaded SRA metadata
 ```
-## Step 4: Variant Calling
+## Step 5: Variant Calling
 
-## Single Sample Processing
+### Single Sample Processing
 ```bash
 # Call variants for one sample (requires existing BAM file)
 make vcf SAMPLE=SRS15348647
@@ -156,7 +157,7 @@ This will generate:
 * variants/SAMPLE.vcf.gz.tbi - VCF index file
 * variants/SAMPLE.vcf.stats.txt - Variant statistics
 
-## Creating a Multisample VCF
+### Creating a Multisample VCF
 After calling variants for all samples, merge them into a single multisample VCF:
 ```bash
 # First, call variants for all samples
@@ -170,7 +171,7 @@ This creates:
 * variants/all_samples.vcf.gz.tbi - Index file
 * variants/all_samples.vcf.stats.txt - Combined statistics
 
-## Step 5: Annotating Variants
+## Step 6: Annotating Variants
 Annotate variants to predict their biological effects using snpEff:
 ```bash
 # Annotate the multisample VCF
@@ -193,7 +194,7 @@ Variant Effects:
 3. LOW impact: Synonymous variants, intron variants
 4. MODIFIER: Intergenic, upstream/downstream variants
 
-## Step 6: Exploring Variant Effects
+## Step 7: Exploring Variant Effects
 After annotation, you can extract specific variant types:
 ```bash
 # Find all HIGH impact variants (potentially damaging)
@@ -214,7 +215,7 @@ grep "frameshift" variants/all_samples.annotated.vcf
 # Count variants by impact
 grep -o "HIGH\|MODERATE\|LOW\|MODIFIER" variants/all_samples.annotated.vcf | sort | uniq -c
 ```
-## Step 7: Visualizing Variants
+## Step 8: Visualizing Variants
 To visualize variants alongside alignments, you can use IGV (Integrative Genomics Viewer):
 
 ### For single sample:
@@ -281,7 +282,8 @@ The IGV targets will automatically:
 * Load coverage tracks (bigWig)
 * Load variant files (VCF)
 * Navigate to the start of the genome
-  
+
+## Step 9: Clean Up (Optional)
 ## Cleanup
 ```bash
 make clean              # Remove all generated files
@@ -289,7 +291,7 @@ make clean-align        # Remove only alignment files
 make clean-vcf          # Remove only variant files
 ```
 
-## Example Workflow
+# Example Workflow
 ```bash
 # 1. Initial setup (once)
 make genome
