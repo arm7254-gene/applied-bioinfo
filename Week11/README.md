@@ -170,7 +170,51 @@ This creates:
 * variants/all_samples.vcf.gz.tbi - Index file
 * variants/all_samples.vcf.stats.txt - Combined statistics
 
-## Step 5: Visualizing Variants
+## Step 5: Annotating Variants
+Annotate variants to predict their biological effects using snpEff:
+```bash
+# Annotate the multisample VCF
+make annotate
+```
+This will:
+1. Build a snpEff database from your reference genome and GFF
+2. Annotate all variants in the multisample VCF
+3. Generate an HTML summary report with charts
+4. Show examples of variants by impact level
+
+Output files:
+* variants/all_samples.annotated.vcf - Annotated VCF with effect predictions
+* variants/snpEff_summary.html - Interactive HTML report (open in browser)
+* snpEff_db/ - Database directory (can be deleted after annotation)
+
+Variant Effects:
+1. HIGH impact: Stop gained/lost, frameshift, splice site disruption
+2. MODERATE impact: Missense variants, in-frame indels
+3. LOW impact: Synonymous variants, intron variants
+4. MODIFIER: Intergenic, upstream/downstream variants
+
+## Step 6: Exploring Variant Effects
+After annotation, you can extract specific variant types:
+```bash
+# Find all HIGH impact variants (potentially damaging)
+grep "HIGH" variants/all_samples.annotated.vcf
+
+# Find missense variants (amino acid changes)
+grep "missense_variant" variants/all_samples.annotated.vcf
+
+# Find synonymous variants (silent mutations)
+grep "synonymous_variant" variants/all_samples.annotated.vcf
+
+# Find stop-gained variants (nonsense mutations)
+grep "stop_gained" variants/all_samples.annotated.vcf
+
+# Find frameshift variants
+grep "frameshift" variants/all_samples.annotated.vcf
+
+# Count variants by impact
+grep -o "HIGH\|MODERATE\|LOW\|MODIFIER" variants/all_samples.annotated.vcf | sort | uniq -c
+```
+## Step 7: Visualizing Variants
 To visualize variants alongside alignments, you can use IGV (Integrative Genomics Viewer):
 
 ### For single sample:
@@ -253,10 +297,26 @@ for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
     echo ""
 done
 
-# 7. If all samples look good, create multisample VCF
+# 7. Create multisample VCF
 make merge-vcf
 
-# 8. Visualize in IGV with genome, GFF, and all_samples.vcf.gz
+# 8. Annotate variants to predict effects
+make annotate
+
+# 9. Open the HTML summary report
+open variants/snpEff_summary.html
+
+# 10. Find examples of different variant types
+echo "=== HIGH impact variants ==="
+grep "HIGH" variants/all_samples.annotated.vcf | head -3
+
+echo "=== Missense variants ==="
+grep "missense_variant" variants/all_samples.annotated.vcf | head -3
+
+echo "=== Synonymous variants ==="
+grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
+
+# 11. Visualize in IGV with genome, GFF, BAMs, and annotated VCF
 ```
 
 
