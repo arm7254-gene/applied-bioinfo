@@ -307,10 +307,11 @@ make vcf SAMPLE=SRS15348647
 # 4. View variant results
 cat variants/SRS15348647.vcf.stats.txt
 
-# 5. Process all samples
+# 5. Process all samples (includes merge-vcf and annotate)
 make -f Looper.mk all
 
-# 6. Check sample quality (alignment stats and variant counts)
+# 6. Check sample quality
+# Check alignment stats and variant counts for all samples
 for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
     echo "=== $sample ==="
     grep "mapped (" alignments/${sample}.stats.txt
@@ -318,26 +319,41 @@ for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
     echo ""
 done
 
-# 7. Create multisample VCF
-make merge-vcf
-
-# 8. Annotate variants to predict effects
-make annotate
-
-# 9. Open the HTML summary report
+# 7. View annotation results
 open variants/snpEff_summary.html
 
-# 10. Find examples of different variant types
-echo "=== HIGH impact variants ==="
-grep "HIGH" variants/all_samples.annotated.vcf | head -3
+# Extract readable variant information
+echo "=== HIGH IMPACT VARIANTS (likely damaging) ==="
+grep "stop_gained\|frameshift" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{
+    split($8, ann, "ANN=")
+    split(ann[2], fields, "|")
+    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
+  }' | head -5
 
-echo "=== Missense variants ==="
-grep "missense_variant" variants/all_samples.annotated.vcf | head -3
+echo -e "\n=== MODERATE IMPACT VARIANTS (amino acid changes) ==="
+grep "missense_variant" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{
+    split($8, ann, "ANN=")
+    split(ann[2], fields, "|")
+    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
+  }' | head -5
 
-echo "=== Synonymous variants ==="
-grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
+echo -e "\n=== LOW IMPACT VARIANTS (silent mutations) ==="
+grep "synonymous_variant" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{
+    split($8, ann, "ANN=")
+    split(ann[2], fields, "|")
+    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
+  }' | head -5
 
-# 11. Visualize in IGV with genome, GFF, BAMs, and annotated VCF
+echo -e "\n=== VARIANT COUNTS ==="
+echo "HIGH impact: $(grep -c 'stop_gained\|frameshift' variants/all_samples.annotated.vcf)"
+echo "MODERATE impact: $(grep -c 'missense_variant' variants/all_samples.annotated.vcf)"
+echo "LOW impact: $(grep -c 'synonymous_variant' variants/all_samples.annotated.vcf)"
+
+# 8. Visualize in IGV
+make igv
 ```
 ## Results:
 
