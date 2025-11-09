@@ -380,4 +380,41 @@ Variants: 100
 Variants: 102
 ```
 
+## Variant Annotation Results
+
+```bash
+High Impact
+Gene: SAOUHSC_00018 | Effect: stop_gained | Change: p.Leu284*
+Gene: SAOUHSC_00094 | Effect: frameshift_variant | Change: p.Glu165fs
+Gene: SAOUHSC_01251 | Effect: stop_gained | Change: p.Gln657*
+Gene: SAOUHSC_01263 | Effect: frameshift_variant | Change: p.Glu56fs
+Gene: SAOUHSC_01911 | Effect: stop_gained | Change: p.Tyr17*
+
+Moderate Impact
+Gene: SAOUHSC_00018 | Effect: missense_variant | Change: p.Leu284Val
+Gene: SAOUHSC_00018 | Effect: missense_variant | Change: p.Lys356Glu
+Gene: SAOUHSC_00100 | Effect: missense_variant | Change: p.Ala144Thr
+Gene: SAOUHSC_00152 | Effect: missense_variant | Change: p.Val47Ala
+Gene: SAOUHSC_00300 | Effect: missense_variant | Change: p.Thr109Met
+
+Low Impact
+Gene: SAOUHSC_00113 | Effect: synonymous_variant | Change: p.Ile519Ile
+Gene: SAOUHSC_00228 | Effect: synonymous_variant | Change: p.Glu317Glu
+Gene: gltD | Effect: synonymous_variant | Change: p.Gly226Gly
+Gene: SAOUHSC_00442 | Effect: synonymous_variant | Change: p.Gly92Gly
+Gene: SAOUHSC_00474 | Effect: synonymous_variant | Change: p.Ala140Ala
+
+Variant Counts
+HIGH impact: 9
+MODERATE impact: 89
+LOW impact: 68
+```
+
+
+
+
+
+
+
+
 
