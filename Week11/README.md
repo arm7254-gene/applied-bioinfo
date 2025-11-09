@@ -322,31 +322,22 @@ done
 # 7. View annotation results
 open variants/snpEff_summary.html
 
-# Extract readable variant information
-echo "=== HIGH IMPACT VARIANTS (likely damaging) ==="
+# HIGH impact
+echo "=== HIGH IMPACT (breaks protein) ==="
 grep "stop_gained\|frameshift" variants/all_samples.annotated.vcf | \
-  awk -F'\t' '{
-    split($8, ann, "ANN=")
-    split(ann[2], fields, "|")
-    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
-  }' | head -5
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
-echo -e "\n=== MODERATE IMPACT VARIANTS (amino acid changes) ==="
+# MODERATE impact  
+echo -e "\n=== MODERATE IMPACT (changes amino acid) ==="
 grep "missense_variant" variants/all_samples.annotated.vcf | \
-  awk -F'\t' '{
-    split($8, ann, "ANN=")
-    split(ann[2], fields, "|")
-    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
-  }' | head -5
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
-echo -e "\n=== LOW IMPACT VARIANTS (silent mutations) ==="
+# LOW impact
+echo -e "\n=== LOW IMPACT (silent, no change) ==="
 grep "synonymous_variant" variants/all_samples.annotated.vcf | \
-  awk -F'\t' '{
-    split($8, ann, "ANN=")
-    split(ann[2], fields, "|")
-    print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]
-  }' | head -5
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
+# Variant Counts
 echo -e "\n=== VARIANT COUNTS ==="
 echo "HIGH impact: $(grep -c 'stop_gained\|frameshift' variants/all_samples.annotated.vcf)"
 echo "MODERATE impact: $(grep -c 'missense_variant' variants/all_samples.annotated.vcf)"
