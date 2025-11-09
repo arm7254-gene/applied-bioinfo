@@ -307,10 +307,11 @@ make vcf SAMPLE=SRS15348647
 # 4. View variant results
 cat variants/SRS15348647.vcf.stats.txt
 
-# 5. Process all samples
+# 5. Process all samples (includes merge-vcf and annotate)
 make -f Looper.mk all
 
-# 6. Check sample quality (alignment stats and variant counts)
+# 6. Check sample quality
+# Check alignment stats and variant counts for all samples
 for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
     echo "=== $sample ==="
     grep "mapped (" alignments/${sample}.stats.txt
@@ -318,26 +319,32 @@ for sample in $(tail -n +2 design.csv | cut -d',' -f2); do
     echo ""
 done
 
-# 7. Create multisample VCF
-make merge-vcf
-
-# 8. Annotate variants to predict effects
-make annotate
-
-# 9. Open the HTML summary report
+# 7. View annotation results
 open variants/snpEff_summary.html
 
-# 10. Find examples of different variant types
-echo "=== HIGH impact variants ==="
-grep "HIGH" variants/all_samples.annotated.vcf | head -3
+# HIGH impact
+echo "=== HIGH IMPACT (breaks protein) ==="
+grep "stop_gained\|frameshift" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
-echo "=== Missense variants ==="
-grep "missense_variant" variants/all_samples.annotated.vcf | head -3
+# MODERATE impact  
+echo -e "\n=== MODERATE IMPACT (changes amino acid) ==="
+grep "missense_variant" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
-echo "=== Synonymous variants ==="
-grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
+# LOW impact
+echo -e "\n=== LOW IMPACT (silent, no change) ==="
+grep "synonymous_variant" variants/all_samples.annotated.vcf | \
+  awk -F'\t' '{split($8, ann, "ANN="); split(ann[2], fields, "|"); print "Gene:", fields[4], "| Effect:", fields[2], "| Change:", fields[11]}' | head -5
 
-# 11. Visualize in IGV with genome, GFF, BAMs, and annotated VCF
+# Variant Counts
+echo -e "\n=== VARIANT COUNTS ==="
+echo "HIGH impact: $(grep -c 'stop_gained\|frameshift' variants/all_samples.annotated.vcf)"
+echo "MODERATE impact: $(grep -c 'missense_variant' variants/all_samples.annotated.vcf)"
+echo "LOW impact: $(grep -c 'synonymous_variant' variants/all_samples.annotated.vcf)"
+
+# 8. Visualize in IGV
+make igv
 ```
 ## Results:
 
@@ -372,5 +379,42 @@ Variants: 100
 276969 + 0 primary mapped (98.92% : N/A)
 Variants: 102
 ```
+
+## Variant Annotation Results
+
+```bash
+High Impact
+Gene: SAOUHSC_00018 | Effect: stop_gained | Change: p.Leu284*
+Gene: SAOUHSC_00094 | Effect: frameshift_variant | Change: p.Glu165fs
+Gene: SAOUHSC_01251 | Effect: stop_gained | Change: p.Gln657*
+Gene: SAOUHSC_01263 | Effect: frameshift_variant | Change: p.Glu56fs
+Gene: SAOUHSC_01911 | Effect: stop_gained | Change: p.Tyr17*
+
+Moderate Impact
+Gene: SAOUHSC_00018 | Effect: missense_variant | Change: p.Leu284Val
+Gene: SAOUHSC_00018 | Effect: missense_variant | Change: p.Lys356Glu
+Gene: SAOUHSC_00100 | Effect: missense_variant | Change: p.Ala144Thr
+Gene: SAOUHSC_00152 | Effect: missense_variant | Change: p.Val47Ala
+Gene: SAOUHSC_00300 | Effect: missense_variant | Change: p.Thr109Met
+
+Low Impact
+Gene: SAOUHSC_00113 | Effect: synonymous_variant | Change: p.Ile519Ile
+Gene: SAOUHSC_00228 | Effect: synonymous_variant | Change: p.Glu317Glu
+Gene: gltD | Effect: synonymous_variant | Change: p.Gly226Gly
+Gene: SAOUHSC_00442 | Effect: synonymous_variant | Change: p.Gly92Gly
+Gene: SAOUHSC_00474 | Effect: synonymous_variant | Change: p.Ala140Ala
+
+Variant Counts
+HIGH impact: 9
+MODERATE impact: 89
+LOW impact: 68
+```
+
+
+
+
+
+
+
 
 
