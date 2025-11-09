@@ -341,6 +341,35 @@ grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
 ```
 ## Results:
 
+=== SRS15348643 ===
+277845 + 0 mapped (99.11% : N/A)
+277510 + 0 primary mapped (99.11% : N/A)
+Variants: 85
+
+=== SRS15348644 ===
+277379 + 0 mapped (99.03% : N/A)
+277277 + 0 primary mapped (99.03% : N/A)
+Variants: 106
+
+=== SRS15348645 ===
+277816 + 0 mapped (99.12% : N/A)
+277539 + 0 primary mapped (99.12% : N/A)
+Variants: 86
+
+=== SRS15348646 ===
+277861 + 0 mapped (99.13% : N/A)
+277571 + 0 primary mapped (99.13% : N/A)
+Variants: 80
+
+=== SRS15348647 ===
+277401 + 0 mapped (99.01% : N/A)
+277238 + 0 primary mapped (99.01% : N/A)
+Variants: 100
+
+=== SRS15348642 ===
+277054 + 0 mapped (98.92% : N/A)
+276969 + 0 primary mapped (98.92% : N/A)
+Variants: 102
 
 
 
