@@ -339,6 +339,7 @@ grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
 
 # 11. Visualize in IGV with genome, GFF, BAMs, and annotated VCF
 ```
+## Results:
 
 
 
