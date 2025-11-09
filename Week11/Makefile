@@ -294,6 +294,41 @@ $(ANNOTATED_VCF): $(MULTISAMPLE_VCF) $(GFF)
 		-stats $(ANNOTATION_SUMMARY) $(GENOME_NAME) $(MULTISAMPLE_VCF) > $(ANNOTATED_VCF)
 	@echo "Done. Check $(ANNOTATED_VCF) and $(ANNOTATION_SUMMARY)"
 
+# ========== IGV visualization ==========
+igv:
+	@echo "=== Loading genome and all data in IGV ==="
+	@echo "Make sure IGV is running with port 60151 enabled"
+	@echo "(Enable port in IGV: View > Preferences > Advanced > Enable port)"
+	echo "new" | $(NC)
+	echo "genome $(DIR)/$(GENOME_FA)" | $(NC)
+	echo "load $(DIR)/$(GFF)" | $(NC)
+	@if [ -f "$(MULTISAMPLE_VCF)" ]; then \
+		echo "load $(DIR)/$(MULTISAMPLE_VCF)" | $(NC); \
+	fi
+	@for bam in $(ALIGN_DIR)/*.sorted.bam; do \
+		if [ -f "$bam" ]; then \
+			echo "load $(DIR)/$bam" | $(NC); \
+		fi; \
+	done
+	echo "collapse" | $(NC)
+	echo "goto NC_007793.1:1-10000" | $(NC)
+
+igv-sample:
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		echo "Example: make igv-sample SAMPLE=SRS15348647"; \
+		exit 1; \
+	fi
+	@echo "=== Loading $(SAMPLE) in IGV ==="
+	echo "new" | $(NC)
+	echo "genome $(DIR)/$(GENOME_FA)" | $(NC)
+	echo "load $(DIR)/$(GFF)" | $(NC)
+	echo "load $(DIR)/$(BAM)" | $(NC)
+	echo "load $(DIR)/$(BIGWIG)" | $(NC)
+	echo "load $(DIR)/$(FILTERED_VCF)" | $(NC)
+	echo "collapse" | $(NC)
+	echo "goto NC_007793.1:1-10000" | $(NC)
+
 
 # ========== Clean files ==========
 clean:
