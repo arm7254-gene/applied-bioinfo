@@ -279,6 +279,22 @@ $(MULTISAMPLE_STATS): $(MULTISAMPLE_VCF)
 	@echo ""
 	@echo "Full statistics saved to: $(MULTISAMPLE_STATS)"
 
+# ========== Annotate variants with snpEff ==========
+annotate: $(ANNOTATED_VCF)
+
+$(ANNOTATED_VCF): $(MULTISAMPLE_VCF) $(GFF)
+	@echo "=== Annotating variants with snpEff ==="
+	mkdir -p snpEff_db/data/$(GENOME_NAME)
+	cp $(GENOME_FA) snpEff_db/data/$(GENOME_NAME)/sequences.fa
+	cp $(GFF) snpEff_db/data/$(GENOME_NAME)/genes.gff
+	echo "data.dir = ./snpEff_db/data/" > snpEff_db/snpEff.config
+	echo "$(GENOME_NAME).genome : $(GENOME_NAME)" >> snpEff_db/snpEff.config
+	snpEff build -gff3 -c snpEff_db/snpEff.config -dataDir ./snpEff_db/data $(GENOME_NAME)
+	snpEff ann -c snpEff_db/snpEff.config -dataDir ./snpEff_db/data \
+		-stats $(ANNOTATION_SUMMARY) $(GENOME_NAME) $(MULTISAMPLE_VCF) > $(ANNOTATED_VCF)
+	@echo "Done. Check $(ANNOTATED_VCF) and $(ANNOTATION_SUMMARY)"
+
+
 # ========== Clean files ==========
 clean:
 	rm -rf $(GENOME_DIR) $(READS_DIR) $(ALIGN_DIR) $(FASTQC_DIR) $(META_DIR) $(VCF_DIR)
