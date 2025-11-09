@@ -341,6 +341,7 @@ grep "synonymous_variant" variants/all_samples.annotated.vcf | head -3
 ```
 ## Results:
 
+```bash
 === SRS15348643 ===
 277845 + 0 mapped (99.11% : N/A)
 277510 + 0 primary mapped (99.11% : N/A)
@@ -370,6 +371,6 @@ Variants: 100
 277054 + 0 mapped (98.92% : N/A)
 276969 + 0 primary mapped (98.92% : N/A)
 Variants: 102
-
+```
 
 
