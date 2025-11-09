@@ -13,6 +13,8 @@
 #   make -f Looper.mk stats            # Generate stats for all
 #   make -f Looper.mk bigwig           # Generate bigWigs for all
 #   make -f Looper.mk vcf              # Call variants for all
+#   make -f Looper.mk merge-vcf        # Merge all VCFs into multisample VCF
+#   make -f Looper.mk annotate         # Annotate multisample VCF
 # ============================================================
 
 DESIGN_FILE = design.csv
@@ -50,5 +52,8 @@ vcf:
 
 merge-vcf:
 	make merge-vcf
+
+annotate:
+	make annotate
 
 .PHONY: all fastq fastqc align stats bigwig vcf merge-vcf
