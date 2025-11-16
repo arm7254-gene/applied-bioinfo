@@ -34,11 +34,6 @@ make -f Evaluate.mk compare
 make -f Evaluate.mk evaluate
 make -f Evaluate.mk report
 ```
-### Step 5: Clean up (Optional, but good habit once all analysis is complete)
-```bash
-make clean                  # Remove all files
-make -f Evaluate.mk clean   # Remove evaluation files
-```
 
 ## Files Generated
 Reference:
@@ -63,7 +58,7 @@ Analysis:
 * report.txt - Final summary report
 
 ## Deliverable: Report with variant counts, tumor-specific variants, and comparison to gold standard.
-### Step 6: iew report
+### Step 5: View report
 ```bash
 cat report.txt
 ```
@@ -124,4 +119,8 @@ chr17	7687289	A	C
 
 ========================================
 ```
-
+### Step 6: Clean up (Optional, but good habit once all analysis is complete)
+```bash
+make clean                  # Remove all files
+make -f Evaluate.mk clean   # Remove evaluation files
+```
