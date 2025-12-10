@@ -33,11 +33,14 @@ Revising and Improving Your Automation Code
 Generate a multisample variant call file (VCF)
 
 ## Week 11
-TBD
+Establish the effects of variants
 
 ## Week 12
-TBD
+Evaluate data from the Cancer Genome in a Bottle project
 
 ## Week 13
-TBD
+Generate an RNA-Seq count matrix
+
+## Week 14
+Perform an RNA-Seq differential gene expression study
 
