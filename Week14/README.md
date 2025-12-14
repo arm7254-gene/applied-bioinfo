@@ -79,4 +79,21 @@ make enrichment             # Functional enrichment analysis
 ##### **MA plot: Mean expression vs log fold-change**
 <img width="800" height="600" alt="ma_plot" src="https://github.com/user-attachments/assets/0856bb19-76ea-4c84-8bcf-7e5095432384" />
 
+#### Functional Enrichment
+Gene lists were extracted for functional analysis:
+
+##### All significant genes:
+  ```bash
+  wc -l results/*gene_ids.txt
+  ```
+  * 182 results/downregulated_gene_ids.txt
+  * 321 results/significant_gene_ids.txt
+  * 139 results/upregulated_gene_ids.txt
+  * 642 total
+
+ ```bash
+make enrichment
+```
+<img width="1000" height="600" alt="functional_categories" src="https://github.com/user-attachments/assets/b0f97d4e-c263-4709-ac89-0b5fe34f1deb" />
+
 
