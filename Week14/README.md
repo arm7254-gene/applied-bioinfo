@@ -55,3 +55,28 @@ make matrix                 # Merge counts into matrix
 make deseq2                 # DESeq2 analysis with PCA and heatmaps
 make enrichment             # Functional enrichment analysis
 ```
+
+#### Statistical Analysis
+* Normalization: DESeq2 median-of-ratios
+* Differential Expression: DESeq2 (v1.x)
+* Significance Thresholds: padj < 0.05, |log2 fold-change| > 1
+* Visualization: PCA, heatmaps, volcano plots, MA plots
+
+### Results
+
+#### Principal Component Analysis
+<img width="800" height="600" alt="pca_plot" src="https://github.com/user-attachments/assets/b0ff8dc1-134c-4842-80fc-e7c83a074869" />
+
+#### Visualization Files:
+
+##### Heatmap: Top 50 different
+<img width="800" height="1000" alt="heatmap_significant" src="https://github.com/user-attachments/assets/00a5e017-b97f-4e0b-9546-5196cd35a41e" />
+ially expressed genes
+
+##### Volcano plot: Significance vs fold-change
+<img width="800" height="600" alt="volcano_plot" src="https://github.com/user-attachments/assets/42a70c8b-2c1a-4667-abe1-9179c604d577" />
+
+##### MA plot: Mean expression vs log fold-change
+<img width="800" height="600" alt="ma_plot" src="https://github.com/user-attachments/assets/0856bb19-76ea-4c84-8bcf-7e5095432384" />
+
+
