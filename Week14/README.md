@@ -2,7 +2,6 @@
 
 #### **Methicillin-Resistant Staphylococcus aureus: Control vs Treatment** <br> BioProject: PRJNA887926 <br> Organism: Staphylococcus aureus subsp. aureus USA300
 
-
 ## Overview
 **MRSA RNA-seq Differential Expression Study**:
 This pipeline processes RNA-seq data from MRSA to generate a count matrix showing gene expression levels. The workflow aligns reads to the S. aureus genome, quantifies gene expression using featureCounts, and produces IGV-compatible visualization files.
