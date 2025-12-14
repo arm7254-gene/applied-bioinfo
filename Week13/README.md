@@ -97,6 +97,9 @@ make -f Looper.mk count    # Count reads per gene with featureCounts
 make matrix                 # Merge into count matrix
 ```
 ## IGV Visualization
+Note: Data analysis done in IGV web browser: https://igv.org/app/ 
+
+
 
 
 ## Count Matrix Analysis
