@@ -96,6 +96,10 @@ make enrichment
 ```
 <img width="1000" height="600" alt="functional_categories" src="https://github.com/user-attachments/assets/b0f97d4e-c263-4709-ac89-0b5fe34f1deb" />
 
+## Discussion
+
+The differential expression analysis reveals transcriptional reprogramming in response to treatment. The clear separation in PCA and the number of differentially expressed genes indicate a robust biological response. Genes showing the strongest downregulation (e.g., SAOUHSC_01121, SAOUHSC_00233) may represent treatment-sensitive pathways, while upregulated genes (e.g., SAOUHSC_00799) could indicate compensatory mechanisms or stress responses.
+
 ## Files and Data
 
 ### Input Data
