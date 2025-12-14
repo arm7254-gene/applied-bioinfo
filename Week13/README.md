@@ -99,6 +99,7 @@ make matrix                 # Merge into count matrix
 ## IGV Visualization
 Note: Data analysis done in IGV web browser: https://igv.org/app/ 
 
+<img width="2254" height="1002" alt="SAOUHSC_01121" src="https://github.com/user-attachments/assets/6bc4464e-3912-4a2c-b528-3395b5887aee" />
 
 
 
