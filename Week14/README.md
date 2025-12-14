@@ -25,7 +25,13 @@ In Im et al.(2022), they investigated the regulatory mechanism responsible for t
 
 This pipeline uses two conda environments:
 * bioinfo - For data download, alignment, and counting
+  ```bash
+  micromamba activate bioinfo
+  ```
 * stats - For statistical analysis of the count matrix
+  ```bash
+  micromamba activate stats
+  ```
 
 ## Quick Start
 
