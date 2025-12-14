@@ -1,183 +1,347 @@
 # ============================================================
-# RNA-Seq Count Matrix Pipeline
+# Makefile for MRSA RNA-seq Analysis (Single Sample)
 # Author: A. Mercedes
-# Week 13 Assignment
-# ============================================================
-# This Makefile automates:
-#   1. Genome/annotation download
-#   2. Read download
-#   3. Genome indexing (HISAT2)
-#   4. Alignment (HISAT2)
-#   5. Feature counting (featureCounts)
-#   6. Coverage tracks (BigWig)
 # ============================================================
 # Usage:
-#   make usage
-#   make genome
-#   make fastq SAMPLE=HBR_1
-#   make align SAMPLE=HBR_1
-#   make count SAMPLE=HBR_1
+#   make usage                       # Show this help
+#   make genome                      # Download genome once
+#   make metadata                    # Download metadata / create design.csv
+#   make index                        # Index genome once
+#
+# Single sample targets (require SAMPLE and SRR variables):
+#   make fastq SAMPLE=... SRR=...    # Download FASTQ reads for one sample
+#   make fastqc SAMPLE=...           # Run FASTQC on one sample
+#   make align SAMPLE=...            # Align one sample
+#   make stats SAMPLE=...            # Generate alignment stats for one sample
+#   make bigwig SAMPLE=...           # Create coverage bigWig for one sample
+#   make vcf SAMPLE=...              # Call variants for one sample
+#
+# See Looper.mk for batch processing all samples
 # ============================================================
 
-# Variables - can be overridden on command line
-SAMPLE = HBR_1
-NREADS = 1000000
+# ========== VARIABLES ==========
+ACC_GCF = GCF_000013425.1
+GENOME_NAME = S_aureus_USA300
+TAXON = "Staphylococcus aureus"
 
-# URLs
-GENOME_URL = https://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz
-GTF_URL = https://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.chr.gtf.gz
+BIOPROJECT = PRJNA887926
+NREADS = 140000
 
-# Directories
-READS_DIR = reads
+GENOME_URL = https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.fna.gz
+ANNOT_URL = https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/013/425/GCF_000013425.1_ASM1342v1/GCF_000013425.1_ASM1342v1_genomic.gff.gz
+
 GENOME_DIR = genome
-BAM_DIR = bam
-COUNTS_DIR = counts
+READS_DIR = reads
+ALIGN_DIR = alignments
+FASTQC_DIR = fastqc_reports
+META_DIR = metadata
+VCF_DIR = variants
 
-# File paths
-GENOME_FA = $(GENOME_DIR)/chr22.fa
-GTF = $(GENOME_DIR)/chr22.gtf
-R1 = $(READS_DIR)/$(SAMPLE)_R1.fq
-BAM = $(BAM_DIR)/$(SAMPLE).bam
-BW = $(BAM_DIR)/$(SAMPLE).bw
-COUNT = $(COUNTS_DIR)/$(SAMPLE).counts.txt
+DESIGN_FILE = design.csv
+META_DESIGN = $(META_DIR)/design.csv
 
-# ============================================================
-# Targets
-# ============================================================
+# Reference files
+GENOME_GZ = $(GENOME_DIR)/$(GENOME_NAME).fna.gz
+GENOME_FA = $(GENOME_DIR)/$(GENOME_NAME).fna
+GFF_GZ = $(GENOME_DIR)/$(GENOME_NAME).gff.gz
+GFF = $(GENOME_DIR)/$(GENOME_NAME).gff
+GENOME_FAI = $(GENOME_FA).fai
+CHROM_SIZES = $(GENOME_DIR)/$(GENOME_NAME).chrom.sizes
+INDEX_PREFIX = $(GENOME_FA)
+
+# Sample-specific files
+SAMPLE ?= 
+SRR ?= 
+
+FASTQ1 = $(READS_DIR)/$(SAMPLE)_1.fastq.gz
+FASTQ2 = $(READS_DIR)/$(SAMPLE)_2.fastq.gz
+BAM_UNSORTED = $(ALIGN_DIR)/$(SAMPLE).bam
+BAM = $(ALIGN_DIR)/$(SAMPLE).sorted.bam
+BAM_INDEX = $(BAM).bai
+STATS = $(ALIGN_DIR)/$(SAMPLE).stats.txt
+BIGWIG = $(ALIGN_DIR)/$(SAMPLE).bw
+
+# Variant calling files
+RAW_VCF = $(VCF_DIR)/$(SAMPLE).raw.vcf.gz
+FILTERED_VCF = $(VCF_DIR)/$(SAMPLE).vcf.gz
+VCF_INDEX = $(FILTERED_VCF).tbi
+VCF_STATS = $(VCF_DIR)/$(SAMPLE).vcf.stats.txt
+
+# Multisample VCF
+MULTISAMPLE_VCF = $(VCF_DIR)/all_samples.vcf.gz
+MULTISAMPLE_INDEX = $(MULTISAMPLE_VCF).tbi
+MULTISAMPLE_STATS = $(VCF_DIR)/all_samples.vcf.stats.txt
+
+# Annotated VCF
+ANNOTATED_VCF = $(VCF_DIR)/all_samples.annotated.vcf
+ANNOTATION_SUMMARY = $(VCF_DIR)/snpEff_summary.html
+
+# IGV settings
+DIR = $(shell pwd)
+NC = nc localhost 60151
+
+# ========== RULES ==========
 
 usage:
-	@echo "RNA-Seq Count Matrix Pipeline"
-	@echo "=============================="
+	@echo "============================================================"
+	@echo "MRSA RNA-seq Analysis Makefile"
+	@echo "============================================================"
 	@echo ""
-	@echo "Current settings:"
-	@echo "  SAMPLE = $(SAMPLE)"
-	@echo "  NREADS = $(NREADS)"
+	@echo "Setup targets (run once):"
+	@echo "  make genome          Download reference genome"
+	@echo "  make metadata        Download SRA metadata"
+	@echo "  make index           Index genome for alignment"
 	@echo ""
-	@echo "Targets:"
-	@echo "  usage   - Show this help"
-	@echo "  design  - Create design.csv file"
-	@echo "  data    - Download UHR/HBR dataset"
-	@echo "  genome  - Download reference genome (chr22) and GTF"
-	@echo "  index   - Index genome with HISAT2"
-	@echo "  fastq   - Verify reads exist for SAMPLE"
-	@echo "  align   - Align reads and create BAM"
-	@echo "  bw      - Create BigWig coverage track"
-	@echo "  count   - Count reads per gene"
-	@echo "  stats   - Show alignment statistics"
+	@echo "Single sample targets (set SAMPLE and SRR):"
+	@echo "  make fastq SAMPLE=SRS15348647 SRR=SRR21835896"
+	@echo "  make fastqc SAMPLE=SRS15348647"
+	@echo "  make align SAMPLE=SRS15348647"
+	@echo "  make stats SAMPLE=SRS15348647"
+	@echo "  make bigwig SAMPLE=SRS15348647"
+	@echo "  make count SAMPLE=SRS15348647"
+	@echo "  make vcf SAMPLE=SRS15348647"
 	@echo ""
-	@echo "Examples:"
-	@echo "  make fastq SAMPLE=HBR_1"
-	@echo "  make align SAMPLE=UHR_2"
-	@echo "  make count SAMPLE=HBR_3"
+	@echo "Multisample analysis:"
+	@echo "  make merge-vcf       Merge all sample VCFs into multisample VCF"
+	@echo "  make matrix          Create count matrix from all samples"
+	@echo "  make annotate        Annotate variants with snpEff"
+	@echo "  make igv             Visualize data in IGV"
+	@echo "  make igv-sample SAMPLE=... View specific sample in IGV"
+	@echo ""
+	@echo "Batch processing:"
+	@echo "  See Looper.mk for processing all samples"
+	@echo "  make -f Looper.mk all"
+	@echo ""
+	@echo "Cleanup:"
+	@echo "  make clean           Remove all generated files"
+	@echo "  make clean-align     Remove only alignment files"
+	@echo "============================================================"
 
-# Create design file
-design: design.csv
+# ========== Genome download ==========
+genome: $(GENOME_FA) $(GFF)
 
-design.csv:
-	@echo "Creating design.csv..."
-	@echo "sample,condition,replicate" > design.csv
-	@echo "HBR_1,brain,1" >> design.csv
-	@echo "HBR_2,brain,2" >> design.csv
-	@echo "HBR_3,brain,3" >> design.csv
-	@echo "UHR_1,cancer,1" >> design.csv
-	@echo "UHR_2,cancer,2" >> design.csv
-	@echo "UHR_3,cancer,3" >> design.csv
-	@echo "Design file created: design.csv"
-
-# Download genome and annotation
-genome: $(GENOME_FA) $(GTF)
-
-$(GENOME_FA):
-	@echo "Downloading chromosome 22 reference..."
+$(GENOME_GZ):
 	mkdir -p $(GENOME_DIR)
-	wget -q --show-progress $(GENOME_URL) -O $(GENOME_DIR)/chr22.fa.gz
-	gunzip $(GENOME_DIR)/chr22.fa.gz
+	wget "$(GENOME_URL)" -O $(GENOME_GZ)
 
-$(GTF):
-	@echo "Downloading GTF annotation..."
+$(GENOME_FA): $(GENOME_GZ)
+	gunzip -c $(GENOME_GZ) > $(GENOME_FA)
+
+$(GFF_GZ):
 	mkdir -p $(GENOME_DIR)
-	wget -q --show-progress $(GTF_URL) -O $(GENOME_DIR)/chr22.gtf.gz
-	gunzip $(GENOME_DIR)/chr22.gtf.gz
-	@echo "Filtering for chromosome 22 only..."
-	grep "^22" $(GENOME_DIR)/chr22.gtf > $(GTF).tmp
-	mv $(GTF).tmp $(GTF)
+	wget "$(ANNOT_URL)" -O $(GFF_GZ)
 
-# Index genome with HISAT2
-index: $(GENOME_DIR)/chr22.1.ht2
+$(GFF): $(GFF_GZ)
+	gunzip -c $(GFF_GZ) > $(GFF)
 
-$(GENOME_DIR)/chr22.1.ht2: $(GENOME_FA)
-	@echo "Indexing genome with HISAT2..."
-	hisat2-build $(GENOME_FA) $(GENOME_DIR)/chr22
+# ========== Index genome ==========
+index: $(INDEX_PREFIX).bwt $(CHROM_SIZES)
 
-# Download UHR/HBR dataset
-data: uhr-hbr.tar.gz
-	tar xzvf uhr-hbr.tar.gz
+$(INDEX_PREFIX).bwt: $(GENOME_FA)
+	bwa index $(GENOME_FA)
 
-uhr-hbr.tar.gz:
-	@echo "Downloading UHR/HBR RNA-seq dataset..."
-	wget http://data.biostarhandbook.com/data/uhr-hbr.tar.gz
+$(GENOME_FAI): $(GENOME_FA)
+	samtools faidx $(GENOME_FA)
 
-# Verify reads exist
-fastq: $(R1)
+$(CHROM_SIZES): $(GENOME_FAI)
+	cut -f1,2 $(GENOME_FAI) > $(CHROM_SIZES)
 
-$(R1): data
-	@if [ ! -f $(R1) ]; then \
-		echo "ERROR: $(R1) not found after download!"; \
+# ========== Metadata download ==========
+metadata: $(META_DESIGN)
+
+$(META_DESIGN):
+	mkdir -p $(META_DIR)
+	esearch -db sra -query "$(BIOPROJECT)[BioProject]" | efetch -format runinfo > $(META_DIR)/runinfo_full.csv
+	echo "Run,Sample" > $(META_DESIGN)
+	tail -n +2 $(META_DIR)/runinfo_full.csv | cut -d',' -f1,30 >> $(META_DESIGN)
+
+# ========== Download FASTQ reads ==========
+fastq: $(FASTQ1) $(FASTQ2)
+
+$(FASTQ1) $(FASTQ2):
+	@if [ -z "$(SAMPLE)" ] || [ -z "$(SRR)" ]; then \
+		echo "Error: Must specify SAMPLE and SRR variables"; \
 		exit 1; \
 	fi
-	@echo "Reads found: $(R1)"
+	mkdir -p $(READS_DIR)
+	fastq-dump -X $(NREADS) --split-files --gzip --outdir $(READS_DIR) $(SRR)
+	mv $(READS_DIR)/$(SRR)_1.fastq.gz $(FASTQ1)
+	mv $(READS_DIR)/$(SRR)_2.fastq.gz $(FASTQ2)
 
-# Align reads
-align: $(BAM).bai
+# ========== FASTQC reports ==========
+fastqc: $(FASTQC_DIR)/$(SAMPLE)_1_fastqc.html
 
-$(BAM): $(GENOME_DIR)/chr22.1.ht2 $(R1)
-	@echo "Aligning $(SAMPLE)..."
-	mkdir -p $(BAM_DIR)
-	hisat2 -x $(GENOME_DIR)/chr22 \
-		-U $(R1) \
-		--threads 4 \
-		2> $(BAM).log \
-		| samtools view -b - \
-		| samtools sort -o $(BAM)
+$(FASTQC_DIR)/$(SAMPLE)_1_fastqc.html: $(FASTQ1) $(FASTQ2)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	mkdir -p $(FASTQC_DIR)
+	fastqc -o $(FASTQC_DIR) $(FASTQ1) $(FASTQ2)
 
-$(BAM).bai: $(BAM)
+# ========== Align reads ==========
+align: $(BAM) $(BAM_INDEX)
+
+$(BAM): $(FASTQ1) $(FASTQ2) $(INDEX_PREFIX).bwt
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	mkdir -p $(ALIGN_DIR)
+	bwa mem $(GENOME_FA) $(FASTQ1) $(FASTQ2) | samtools view -b -o $(BAM_UNSORTED)
+	samtools sort $(BAM_UNSORTED) -o $(BAM)
+	rm $(BAM_UNSORTED)
+
+$(BAM_INDEX): $(BAM)
 	samtools index $(BAM)
-	@echo "Alignment complete: $(BAM)"
 
-# Generate BigWig coverage track
-bw: $(BW)
+# ========== Generate alignment statistics ==========
+stats: $(STATS)
 
-$(BW): $(BAM).bai
-	@echo "Creating BigWig coverage track..."
-	bamCoverage -b $(BAM) -o $(BW) --binSize 10
-	@echo "BigWig created: $(BW)"
-
-# Count reads per gene
-count: $(COUNT)
-
-$(COUNT): $(BAM).bai $(GTF)
-	@echo "Counting reads per gene for $(SAMPLE)..."
-	mkdir -p $(COUNTS_DIR)
-	featureCounts -a $(GTF) \
-		-o $(COUNT) \
-		-t exon \
-		-g gene_id \
-		$(BAM)
-	@echo "Counts saved to: $(COUNT)"
-
-# Alignment statistics
-stats: $(BAM).bai
-	@echo ""
+$(STATS): $(BAM)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	samtools flagstat $(BAM) > $(STATS)
 	@echo "=== Alignment Statistics for $(SAMPLE) ==="
-	@samtools flagstat $(BAM)
-	@echo ""
-	@echo "Alignment log: $(BAM).log"
+	@cat $(STATS)
 
-# Clean up
+# ========== Generate bigWig coverage tracks ==========
+bigwig: $(BIGWIG)
+
+$(BIGWIG): $(BAM) $(BAM_INDEX) $(CHROM_SIZES)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	bedtools genomecov -ibam $(BAM) -bg | sort -k1,1 -k2,2n > $(ALIGN_DIR)/$(SAMPLE).bedGraph
+	bedGraphToBigWig $(ALIGN_DIR)/$(SAMPLE).bedGraph $(CHROM_SIZES) $(BIGWIG)
+	rm $(ALIGN_DIR)/$(SAMPLE).bedGraph
+
+# ========== Count reads per gene ==========
+COUNTS_DIR = counts
+COUNT_FILE = $(COUNTS_DIR)/$(SAMPLE).counts.txt
+
+count: $(COUNT_FILE)
+
+$(COUNT_FILE): $(BAM) $(BAM_INDEX) $(GFF)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	mkdir -p $(COUNTS_DIR)
+	featureCounts -a $(GFF) -o $(COUNT_FILE) -t gene -g ID -p $(BAM)
+	@echo "=== Read counts for $(SAMPLE) ==="
+	@tail -n +3 $(COUNT_FILE) | head -5
+
+# ========== Variant calling ==========
+vcf: $(FILTERED_VCF) $(VCF_INDEX) $(VCF_STATS)
+
+$(RAW_VCF): $(BAM) $(BAM_INDEX) $(GENOME_FA) $(GENOME_FAI)
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		exit 1; \
+	fi
+	mkdir -p $(VCF_DIR)
+	bcftools mpileup -Ou -f $(GENOME_FA) $(BAM) | bcftools call -mv -Oz -o $(RAW_VCF)
+
+$(FILTERED_VCF): $(RAW_VCF)
+	bcftools filter -i 'QUAL>=20 && DP>=10' -Oz -o $(FILTERED_VCF) $(RAW_VCF)
+
+$(VCF_INDEX): $(FILTERED_VCF)
+	bcftools index -t $(FILTERED_VCF)
+
+$(VCF_STATS): $(FILTERED_VCF)
+	bcftools stats $(FILTERED_VCF) > $(VCF_STATS)
+	@echo "=== Variant Summary for $(SAMPLE) ==="
+	@grep "^SN" $(VCF_STATS) | cut -f2-
+
+# ========== Merge VCFs into multisample VCF ==========
+merge-vcf: $(MULTISAMPLE_VCF) $(MULTISAMPLE_INDEX) $(MULTISAMPLE_STATS)
+
+$(MULTISAMPLE_VCF): $(DESIGN_FILE)
+	@echo "=== Merging individual VCFs into multisample VCF ==="
+	tail -n +2 $(DESIGN_FILE) | cut -d',' -f2 | grep -v '^$$' | \
+		awk '{print "$(VCF_DIR)/" $$1 ".vcf.gz"}' > $(VCF_DIR)/vcf_list.txt
+	bcftools merge -l $(VCF_DIR)/vcf_list.txt -Oz -o $(MULTISAMPLE_VCF)
+	rm $(VCF_DIR)/vcf_list.txt
+
+$(MULTISAMPLE_INDEX): $(MULTISAMPLE_VCF)
+	bcftools index -t $(MULTISAMPLE_VCF)
+
+$(MULTISAMPLE_STATS): $(MULTISAMPLE_VCF)
+	bcftools stats $(MULTISAMPLE_VCF) > $(MULTISAMPLE_STATS)
+	@echo "=== Multisample statistics: $(MULTISAMPLE_STATS) ==="
+
+# ========== Create count matrix ==========
+COUNT_MATRIX = $(COUNTS_DIR)/count_matrix.txt
+
+matrix: $(COUNT_MATRIX)
+
+$(COUNT_MATRIX): $(DESIGN_FILE)
+	@echo "=== Creating count matrix from all samples ==="
+	@bash merge_counts.sh
+
+# ========== Annotate variants with snpEff ==========
+annotate: $(ANNOTATED_VCF)
+
+$(ANNOTATED_VCF): $(MULTISAMPLE_VCF) $(GFF)
+	@echo "=== Annotating variants with snpEff ==="
+	mkdir -p snpEff_db/data/$(GENOME_NAME)
+	cp $(GENOME_FA) snpEff_db/data/$(GENOME_NAME)/sequences.fa
+	cp $(GFF) snpEff_db/data/$(GENOME_NAME)/genes.gff
+	echo "data.dir = ./data" > snpEff_db/snpEff.config
+	echo "$(GENOME_NAME).genome : $(GENOME_NAME)" >> snpEff_db/snpEff.config
+	cd snpEff_db && snpEff build -gff3 -c snpEff.config $(GENOME_NAME)
+	cd snpEff_db && snpEff ann -c snpEff.config \
+		-stats ../$(ANNOTATION_SUMMARY) $(GENOME_NAME) ../$(MULTISAMPLE_VCF) > ../$(ANNOTATED_VCF)
+	@echo "Done. Check $(ANNOTATED_VCF) and $(ANNOTATION_SUMMARY)"
+
+# ========== IGV visualization ==========
+igv:
+	@echo "=== Loading genome and all data in IGV ==="
+	@echo "Make sure IGV is running with port 60151 enabled"
+	@echo "(Enable port in IGV: View > Preferences > Advanced > Enable port)"
+	echo "new" | $(NC)
+	echo "genome $(DIR)/$(GENOME_FA)" | $(NC)
+	echo "load $(DIR)/$(GFF)" | $(NC)
+	@if [ -f "$(MULTISAMPLE_VCF)" ]; then \
+		echo "load $(DIR)/$(MULTISAMPLE_VCF)" | $(NC); \
+	fi
+	@for bam in $(ALIGN_DIR)/*.sorted.bam; do \
+		if [ -f "$bam" ]; then \
+			echo "load $(DIR)/$bam" | $(NC); \
+		fi; \
+	done
+	echo "collapse" | $(NC)
+	echo "goto NC_007793.1:1-10000" | $(NC)
+
+igv-sample:
+	@if [ -z "$(SAMPLE)" ]; then \
+		echo "Error: Must specify SAMPLE variable"; \
+		echo "Example: make igv-sample SAMPLE=SRS15348647"; \
+		exit 1; \
+	fi
+	@echo "=== Loading $(SAMPLE) in IGV ==="
+	echo "new" | $(NC)
+	echo "genome $(DIR)/$(GENOME_FA)" | $(NC)
+	echo "load $(DIR)/$(GFF)" | $(NC)
+	echo "load $(DIR)/$(BAM)" | $(NC)
+	echo "load $(DIR)/$(BIGWIG)" | $(NC)
+	echo "load $(DIR)/$(FILTERED_VCF)" | $(NC)
+	echo "collapse" | $(NC)
+	echo "goto NC_007793.1:1-10000" | $(NC)
+
+# ========== Clean files ==========
 clean:
-	rm -rf $(BAM_DIR) $(COUNTS_DIR)
-	@echo "Cleaned alignments and counts"
+	rm -rf $(GENOME_DIR) $(READS_DIR) $(ALIGN_DIR) $(FASTQC_DIR) $(META_DIR) $(VCF_DIR) snpEff_db
 
-clean-all:
-	rm -rf $(GENOME_DIR) $(BAM_DIR) $(COUNTS_DIR)
-	@echo "Cleaned all generated files (keeping reads)"
+clean-align:
+	rm -rf $(ALIGN_DIR)
+
+clean-vcf:
+	rm -rf $(VCF_DIR) snpEff_db
+
+.PHONY: usage genome metadata fastq fastqc index align stats bigwig vcf clean clean-align clean-vcf
+.PHONY: merge-vcf annotate igv igv-sample
