@@ -6,6 +6,7 @@ This pipeline processes RNA-seq data from MRSA to generate a count matrix showin
 
 ## Samples:
 
+In Im et al.(2022), they investigated the regulatory mechanism responsible for the inhibitory effect of NaP on MRSA using RNA-Seq analysis
 
 | Source                  | Sample Description    | Sample ID     | SRR Accession |
 | :---------------------- | :-------------------- | :------------ | :------------ |
