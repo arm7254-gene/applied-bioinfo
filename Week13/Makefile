@@ -55,6 +55,7 @@ usage:
 	@echo ""
 	@echo "Targets:"
 	@echo "  usage   - Show this help"
+	@echo "  design  - Create design.csv file"
 	@echo "  data    - Download UHR/HBR dataset"
 	@echo "  genome  - Download reference genome (chr22) and GTF"
 	@echo "  index   - Index genome with HISAT2"
@@ -68,6 +69,20 @@ usage:
 	@echo "  make fastq SAMPLE=HBR_1"
 	@echo "  make align SAMPLE=UHR_2"
 	@echo "  make count SAMPLE=HBR_3"
+
+# Create design file
+design: design.csv
+
+design.csv:
+	@echo "Creating design.csv..."
+	@echo "sample,condition,replicate" > design.csv
+	@echo "HBR_1,brain,1" >> design.csv
+	@echo "HBR_2,brain,2" >> design.csv
+	@echo "HBR_3,brain,3" >> design.csv
+	@echo "UHR_1,cancer,1" >> design.csv
+	@echo "UHR_2,cancer,2" >> design.csv
+	@echo "UHR_3,cancer,3" >> design.csv
+	@echo "Design file created: design.csv"
 
 # Download genome and annotation
 genome: $(GENOME_FA) $(GTF)
