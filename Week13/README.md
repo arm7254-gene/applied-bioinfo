@@ -1,6 +1,6 @@
 # Week 13 Assignment: Generate an RNA-Seq count matrix
 
-# Overview
+## Overview
 
 This pipeline processes RNA-seq data to generate a count matrix showing gene expression levels across samples. The workflow aligns reads to the human genome (chr22), quantifies gene expression, and produces IGV-compatible visualization files.
 
@@ -11,14 +11,25 @@ This pipeline processes RNA-seq data to generate a count matrix showing gene exp
 * HBR (Human Brain Reference): 3 replicates - total RNA from 23 human brains
 * UHR (Universal Human Reference): 3 replicates - total RNA from 10 cancer cell lines
 
-# Setup 
+## Setup 
 
-## Environment Requirements
+### Environment Requirements
 
 This pipeline uses two conda environments:
 * bioinfo - For data download, alignment, and counting
 * stats - For statistical analysis of the count matrix
 
-# Quickstart
+## Quick Start
 
-## Step 1: Download data and genome (bioinfo environment)
+### Step 1: Download data and genome (bioinfo environment)
+```bash
+conda activate bioinfo
+
+# Download the UHR/HBR dataset
+make data
+
+# Download genome and annotation
+make genome
+
+# Index genome
+make index
