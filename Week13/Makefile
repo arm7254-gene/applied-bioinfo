@@ -88,6 +88,7 @@ usage:
 	@echo "============================================================"
 	@echo ""
 	@echo "Setup targets (run once):"
+	@echo "  make design          Create design.csv file"
 	@echo "  make genome          Download reference genome"
 	@echo "  make metadata        Download SRA metadata"
 	@echo "  make index           Index genome for alignment"
@@ -154,6 +155,21 @@ $(META_DESIGN):
 	esearch -db sra -query "$(BIOPROJECT)[BioProject]" | efetch -format runinfo > $(META_DIR)/runinfo_full.csv
 	echo "Run,Sample" > $(META_DESIGN)
 	tail -n +2 $(META_DIR)/runinfo_full.csv | cut -d',' -f1,30 >> $(META_DESIGN)
+
+# ========== Create design file ==========
+design: $(DESIGN_FILE)
+
+$(DESIGN_FILE):
+	@echo "Creating design.csv with sample conditions..."
+	@echo "Run,Sample,Condition" > $(DESIGN_FILE)
+	@echo "SRR21835898,SRS15348645,Control" >> $(DESIGN_FILE)
+	@echo "SRR21835897,SRS15348646,Control" >> $(DESIGN_FILE)
+	@echo "SRR21835896,SRS15348647,Control" >> $(DESIGN_FILE)
+	@echo "SRR21835901,SRS15348642,Treatment" >> $(DESIGN_FILE)
+	@echo "SRR21835900,SRS15348643,Treatment" >> $(DESIGN_FILE)
+	@echo "SRR21835899,SRS15348644,Treatment" >> $(DESIGN_FILE)
+	@echo "Design file created: $(DESIGN_FILE)"
+	@cat $(DESIGN_FILE)
 
 # ========== Download FASTQ reads ==========
 fastq: $(FASTQ1) $(FASTQ2)
@@ -343,5 +359,5 @@ clean-align:
 clean-vcf:
 	rm -rf $(VCF_DIR) snpEff_db
 
-.PHONY: usage genome metadata fastq fastqc index align stats bigwig vcf clean clean-align clean-vcf
+.PHONY: usage genome metadata design fastq fastqc index align stats bigwig count matrix vcf clean clean-align clean-vcf
 .PHONY: merge-vcf annotate igv igv-sample
