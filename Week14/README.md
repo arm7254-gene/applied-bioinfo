@@ -1,4 +1,7 @@
-# Week 14 Assignment: Perform an RNA-Seq differential gene expression study
+# Week 14 Assignment: Perform an RNA-Seq differential gene expression study  
+
+#### **Methicillin-Resistant Staphylococcus aureus: Control vs Treatment** <br> BioProject: PRJNA887926 <br> Organism: Staphylococcus aureus subsp. aureus USA300
+
 
 ## Overview
 **MRSA RNA-seq Differential Expression Study**:
