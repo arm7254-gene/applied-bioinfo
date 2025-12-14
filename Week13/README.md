@@ -18,3 +18,7 @@ This pipeline processes RNA-seq data to generate a count matrix showing gene exp
 This pipeline uses two conda environments:
 * bioinfo - For data download, alignment, and counting
 * stats - For statistical analysis of the count matrix
+
+# Quickstart
+
+## Step 1: Download data and genome (bioinfo environment)
