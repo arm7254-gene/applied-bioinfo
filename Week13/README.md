@@ -23,7 +23,7 @@ This pipeline uses two conda environments:
 
 ### Step 1: Download data and genome (bioinfo environment)
 ```bash
-conda activate bioinfo
+micromamba activate bioinfo
 
 # Download the UHR/HBR dataset
 make data
@@ -33,3 +33,26 @@ make genome
 
 # Index genome
 make index
+```
+
+### Step 2: Processing Samples 
+
+#### Process one sample
+```bash
+# Process one sample
+make align SAMPLE=HBR_1
+make count SAMPLE=HBR_1
+make bw SAMPLE=HBR_1
+```
+
+#### Process all samples
+```bash
+# Align all samples
+make -f Batch.mk all-align
+
+# Count all samples
+make -f Batch.mk all-counts
+
+# Create count matrix
+make -f Batch.mk matrix
+```
