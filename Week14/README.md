@@ -52,7 +52,6 @@ make matrix                 # Merge counts into matrix
 
 ### Differential Expression (stats environment)
 ```bash
-micromamba activate stats
 make deseq2                 # DESeq2 analysis with PCA and heatmaps
 make enrichment             # Functional enrichment analysis
 ```
