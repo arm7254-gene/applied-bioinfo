@@ -2,14 +2,19 @@
 
 ## Overview
 
-This pipeline processes RNA-seq data to generate a count matrix showing gene expression levels across samples. The workflow aligns reads to the human genome (chr22), quantifies gene expression, and produces IGV-compatible visualization files.
 
-* Dataset: UHR (Universal Human Reference) vs HBR (Human Brain Reference)
-* Chromosome: chr22 (for faster processing)
 
 ## Samples:
-* HBR (Human Brain Reference): 3 replicates - total RNA from 23 human brains
-* UHR (Universal Human Reference): 3 replicates - total RNA from 10 cancer cell lines
+
+
+| Source                  | Sample Description    | Sample ID     | SRR Accession |
+| :---------------------- | :-------------------- | :------------ | :------------ |
+| BioProject PRJNA887926  | Control Replicate 1   |  SRS15348645  | SRR21835898   |
+|                         | Control Replicate 2   |  SRS15348646  | SRR21835897   |
+|                         | Control Replicate 3   |  SRS15348647  | SRR21835896   |
+|                         | Treatment Replicate 1 |  SRS15348642  | SRR21835901   |
+|                         | Treatment Replicate 2 |  SRS15348643  | SRR21835900   |
+|                         | Treatment Replicate 3 |  SRS15348644  | SRR21835899   |
 
 ## Setup 
 
