@@ -67,5 +67,43 @@ make bigwig SAMPLE=SRS15348647
 make count SAMPLE=SRS15348647
 make stats SAMPLE=SRS15348647
 ```
+### 4. Cleanup
+```bash
+Clean Up
+```
+
+## Workflow Steps
+
+### 1. Data Download
+```bash
+make genome         # S. aureus USA300 genome and GFF annotation
+make -f Looper.mk fastq    # Download all 6 samples (140k reads each)
+```
+
+### 2. Alignment
+```bash
+make -f Looper.mk align    # Align with BWA, create sorted BAM files
+make -f Looper.mk stats    # Generate alignment statistics
+```
+
+### 3. Visualization
+```bash
+make -f Looper.mk bigwig   # Create BigWig coverage tracks for IGV
+```
+
+### 4. Gene Counting
+```bash
+make -f Looper.mk count    # Count reads per gene with featureCounts
+make matrix                 # Merge into count matrix
+```
+## IGV Visualization
+
+
+## Count Matrix Analysis
+
+### View the matrix:
+```bash
+head counts/count_matrix.txt
+```
 
 
