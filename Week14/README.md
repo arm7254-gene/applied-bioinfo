@@ -24,3 +24,77 @@ In Im et al.(2022), they investigated the regulatory mechanism responsible for t
 This pipeline uses two conda environments:
 * bioinfo - For data download, alignment, and counting
 * stats - For statistical analysis of the count matrix
+
+## Quick Start
+
+### 1. Setup (run once)
+```bash
+micromamba activate bioinfo
+
+# Create design file
+make design
+
+# Download reference genome and annotation
+make genome
+
+# Index genome
+make index
+```
+
+### 2. Process all samples (batch)
+```bash
+# Download reads for all samples
+make -f Looper.mk fastq
+
+# Align all samples
+make -f Looper.mk align
+
+# Generate coverage tracks
+make -f Looper.mk bigwig
+
+# Count reads per gene
+make -f Looper.mk count
+
+# Create count matrix
+make matrix
+```
+
+### 3. Or process one sample at a time
+```bash
+# Example with control replicate 3
+make fastq SAMPLE=SRS15348647 SRR=SRR21835896
+make align SAMPLE=SRS15348647
+make bigwig SAMPLE=SRS15348647
+make count SAMPLE=SRS15348647
+make stats SAMPLE=SRS15348647
+```
+### 4. Cleanup
+```bash
+make clean-align    # Remove only alignments
+make clean          # Remove all generated files
+```
+
+## Workflow Steps
+
+### 1. Data Download
+```bash
+make genome         # S. aureus USA300 genome and GFF annotation
+make -f Looper.mk fastq    # Download all 6 samples (140k reads each)
+```
+
+### 2. Alignment
+```bash
+make -f Looper.mk align    # Align with BWA, create sorted BAM files
+make -f Looper.mk stats    # Generate alignment statistics
+```
+
+### 3. Visualization
+```bash
+make -f Looper.mk bigwig   # Create BigWig coverage tracks for IGV
+```
+
+### 4. Gene Counting
+```bash
+make -f Looper.mk count    # Count reads per gene with featureCounts
+make matrix                 # Merge into count matrix
+```
