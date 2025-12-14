@@ -25,6 +25,9 @@ This pipeline uses two conda environments:
 ```bash
 micromamba activate bioinfo
 
+# Create the design file
+make design
+
 # Download the UHR/HBR dataset
 make data
 
