@@ -171,4 +171,63 @@ gene-SAOUHSC_02849,1768,1851,1692,1386,1338,1176
 gene-SAOUHSC_02443,1736,1801,2891,3702,3182,3167
 gene-SAOUHSC_00094,1714,1622,1366,332,361,345
 ```
+Note: The above is not easily appreciated as is, so use the R visualization described below to create a heatmap of the above results!
+
+## R Visualization
+
+### Step 1: Create R script
+```bash
+cat > visualize_counts.R << 'EOF'
+#!/usr/bin/env Rscript
+# Super simple count matrix visualization
+# Usage: Rscript visualize_counts.R
+
+# Load library
+library(gplots)
+
+# Read count matrix
+counts <- read.csv("counts/count_matrix.txt", row.names=1)
+
+# Get top 30 most highly expressed genes
+top_genes <- head(counts[order(-rowSums(counts)),], 30)
+
+# Create heatmap
+png("counts/heatmap_top30.png", width=800, height=1000)
+heatmap.2(as.matrix(top_genes), 
+          trace="none",
+          col=colorpanel(100, "blue", "white", "red"),
+          margins=c(10,15),
+          main="Top 30 Most Expressed Genes\nControl vs Treatment",
+          cexRow=0.8,
+          cexCol=1.2)
+dev.off()
+
+cat("\n=== Heatmap created: counts/heatmap_top30.png ===\n\n")
+
+# Print summary
+cat("Top 5 genes by total expression:\n")
+print(head(top_genes, 5))
+
+cat("\n\nControl samples (first 3 columns) vs Treatment samples (last 3 columns)\n")
+cat("Red = high expression, Blue = low expression\n")
+EOF
+
+# Now run it
+Rscript visualize_counts.R
+```
+
+### Step 2: Activate Stats Environment
+```bash
+micromamba activate stats
+```
+
+### Step 3: Run Script (from the terminal)
+```bash
+# Run the script
+Rscript visualize_counts.R
+```
+Note: Heatmap created: counts/heatmap_top30.png will be added to the ../counts
+
+<img width="800" height="1000" alt="heatmap_top30" src="https://github.com/user-attachments/assets/1cee1407-073c-479a-bc13-06a42775e92e" />
+
 
