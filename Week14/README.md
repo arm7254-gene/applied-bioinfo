@@ -96,4 +96,32 @@ make enrichment
 ```
 <img width="1000" height="600" alt="functional_categories" src="https://github.com/user-attachments/assets/b0f97d4e-c263-4709-ac89-0b5fe34f1deb" />
 
+## Files and Data
 
+### Input Data
+* design.csv - Experimental design (6 samples, conditions labeled)
+* genome/S_aureus_USA300.fna - Reference genome
+* genome/S_aureus_USA300.gff - Gene annotations
+* reads/ - FASTQ files (6 samples, paired-end)
+
+### Intermediate Files
+* alignments/ - BAM files and BigWig coverage tracks
+* counts/ - Per-sample gene counts and count matrix
+
+### Results
+* results/deseq2_all_genes.csv - All genes with statistics
+* results/deseq2_significant_genes.csv - Significant genes only
+* results/pca_plot.png - Principal component analysis
+* results/heatmap_significant.png - Expression heatmap
+* results/volcano_plot.png - Volcano plot
+* results/ma_plot.png - MA plot
+* results/enrichment_summary.csv - Enrichment analysis summary
+* results/functional_enrichment.csv
+* results/functional_categories.png - Functional Categories in Differentially Expressed Genes
+
+### Scripts
+* Makefile - Automated pipeline (bioinfo steps)
+* Looper.mk - Batch processing
+* deseq2_analysis.R - Differential expression analysis
+* functional_enrichment.R - Functional enrichment
+* merge_counts.sh - Count matrix creation
