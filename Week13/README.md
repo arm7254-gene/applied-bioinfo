@@ -70,7 +70,8 @@ make stats SAMPLE=SRS15348647
 ```
 ### 4. Cleanup
 ```bash
-Clean Up
+make clean-align    # Remove only alignments
+make clean          # Remove all generated files
 ```
 
 ## Workflow Steps
