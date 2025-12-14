@@ -69,14 +69,14 @@ make enrichment             # Functional enrichment analysis
 
 #### Visualization Files:
 
-##### Heatmap: Top 50 different
+##### **Heatmap: Top 50 differentially expressed genes**
 <img width="800" height="1000" alt="heatmap_significant" src="https://github.com/user-attachments/assets/00a5e017-b97f-4e0b-9546-5196cd35a41e" />
-ially expressed genes
 
-##### Volcano plot: Significance vs fold-change
+
+##### **Volcano plot: Significance vs fold-change**
 <img width="800" height="600" alt="volcano_plot" src="https://github.com/user-attachments/assets/42a70c8b-2c1a-4667-abe1-9179c604d577" />
 
-##### MA plot: Mean expression vs log fold-change
+##### **MA plot: Mean expression vs log fold-change**
 <img width="800" height="600" alt="ma_plot" src="https://github.com/user-attachments/assets/0856bb19-76ea-4c84-8bcf-7e5095432384" />
 
 
