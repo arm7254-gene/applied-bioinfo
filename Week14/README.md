@@ -124,3 +124,9 @@ The differential expression analysis reveals transcriptional reprogramming in re
 * deseq2_analysis.R - Differential expression analysis
 * functional_enrichment.R - Functional enrichment
 * merge_counts.sh - Count matrix creation
+
+## Clean Up (only when analysis is complete and files no longer needed!)
+```bash
+make clean-align    # Remove only alignments
+make clean          # Remove all generated files
+```
