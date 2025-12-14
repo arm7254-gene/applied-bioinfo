@@ -107,6 +107,7 @@ tail -n +2 counts/count_matrix.txt | sort -t',' -k2 -rn | head -20
 #### Gene: SAOUHSC_01121 - Strong differential expression!
 * Control: 4,616, 4,127, 4,226
 * Treatment: 176, 255, 274
+* ~16-fold decrease in treatment! 
 
 <img width="2254" height="1002" alt="SAOUHSC_01121" src="https://github.com/user-attachments/assets/6bc4464e-3912-4a2c-b528-3395b5887aee" />
 
@@ -115,6 +116,7 @@ tail -n +2 counts/count_matrix.txt | sort -t',' -k2 -rn | head -20
 #### Gene: SAOUHSC_00233  - Strong differential expression!
 * Control: 3,641, 3,648, 3,970
 * Treatment: 213, 188, 139
+* ~20-fold decrease in treatment!
 
 <img width="2254" height="1002" alt="SAOUHSC_00233" src="https://github.com/user-attachments/assets/47d5e1e7-3bdc-46d7-af40-8ecc5f2eb98f" />
 
@@ -126,5 +128,46 @@ tail -n +2 counts/count_matrix.txt | sort -t',' -k2 -rn | head -20
 ```bash
 head counts/count_matrix.txt
 ```
+#### Output
+```bash
+Geneid,SRS15348645,SRS15348646,SRS15348647,SRS15348642,SRS15348643,SRS15348644
+gene-SAOUHSC_00001,70,67,53,83,79,92
+gene-SAOUHSC_00002,37,47,53,81,48,53
+gene-SAOUHSC_00003,1,2,0,3,3,2
+gene-SAOUHSC_00004,16,24,8,41,38,42
+gene-SAOUHSC_00005,45,26,28,84,71,86
+gene-SAOUHSC_00006,26,38,22,60,60,68
+gene-SAOUHSC_00007,5,0,2,0,0,0
+gene-SAOUHSC_00008,61,79,56,46,55,42
+gene-SAOUHSC_00009,58,79,70,26,20,30
+```
 
+### Find genes with consistent expression:
+```bash
+# Look for genes with similar counts across replicates
+tail -n +2 counts/count_matrix.txt | sort -t',' -k2 -rn | head -20
+```
+#### Output
+```bash
+gene-SAOUHSC_00206,11861,12044,9049,8561,8035,8239
+gene-SAOUHSC_02261,5149,5699,6709,3120,2622,2622
+gene-SAOUHSC_01121,4616,4127,4226,176,255,274
+gene-SAOUHSC_02264,4245,4059,3810,1853,2031,1744
+gene-SAOUHSC_02265,3991,4310,5377,2838,2463,2367
+gene-SAOUHSC_02260,3716,4583,2768,1453,1663,1769
+gene-SAOUHSC_00233,3641,3648,3970,213,188,139
+gene-SAOUHSC_01490,3171,3290,1639,1704,1895,1666
+gene-SAOUHSC_01001,3161,3205,4346,4467,4102,3934
+gene-SAOUHSC_00356,2856,2654,1491,1533,1787,2060
+gene-SAOUHSC_00300,2633,2423,2397,2742,2734,2828
+gene-SAOUHSC_00529,2470,2558,2454,2307,2352,2670
+gene-SAOUHSC_01418,2328,2334,1932,985,1110,1078
+gene-SAOUHSC_00187,2135,2357,2634,736,764,802
+gene-SAOUHSC_00144,2063,2106,2604,833,924,857
+gene-SAOUHSC_02751,2022,2001,1808,601,735,603
+gene-SAOUHSC_02441,1782,1931,2095,2759,2415,2578
+gene-SAOUHSC_02849,1768,1851,1692,1386,1338,1176
+gene-SAOUHSC_02443,1736,1801,2891,3702,3182,3167
+gene-SAOUHSC_00094,1714,1622,1366,332,361,345
+```
 
