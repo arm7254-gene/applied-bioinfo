@@ -99,9 +99,26 @@ make matrix                 # Merge into count matrix
 ## IGV Visualization
 Note: Data analysis done in IGV web browser: https://igv.org/app/ 
 
+### Top Gene Candidates:
+```bash
+# Find genes with highest counts
+tail -n +2 counts/count_matrix.txt | sort -t',' -k2 -rn | head -20
+```
+#### Gene: SAOUHSC_01121 - Strong differential expression!
+* Control: 4,616, 4,127, 4,226
+* Treatment: 176, 255, 274
+
 <img width="2254" height="1002" alt="SAOUHSC_01121" src="https://github.com/user-attachments/assets/6bc4464e-3912-4a2c-b528-3395b5887aee" />
 
+<img width="2254" height="1002" alt="SAOUHSC_01121_Zoom" src="https://github.com/user-attachments/assets/318466e6-8e38-45a1-b341-07458d3a159d" />
 
+#### Gene: SAOUHSC_00233  - Strong differential expression!
+* Control: 3,641, 3,648, 3,970
+* Treatment: 213, 188, 139
+
+<img width="2254" height="1002" alt="SAOUHSC_00233" src="https://github.com/user-attachments/assets/47d5e1e7-3bdc-46d7-af40-8ecc5f2eb98f" />
+
+<img width="2254" height="1002" alt="SAOUHSC_00233_Zoom" src="https://github.com/user-attachments/assets/ad98d795-0a59-42b8-aa6d-a37beb6eb10a" />
 
 ## Count Matrix Analysis
 
