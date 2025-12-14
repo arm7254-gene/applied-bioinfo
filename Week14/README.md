@@ -70,17 +70,15 @@ make enrichment             # Functional enrichment analysis
 #### Visualization Files:
 
 ##### **Heatmap: Top 50 differentially expressed genes**
-<img width="800" height="1000" alt="heatmap_significant" src="https://github.com/user-attachments/assets/00a5e017-b97f-4e0b-9546-5196cd35a41e" />
-
+<img width="900" height="1200" alt="heatmap_significant" src="https://github.com/user-attachments/assets/8527774c-5076-4413-b9c9-8eacc0a02780" />
 
 ##### **Volcano plot: Significance vs fold-change**
-<img width="800" height="600" alt="volcano_plot" src="https://github.com/user-attachments/assets/42a70c8b-2c1a-4667-abe1-9179c604d577" />
+<img width="900" height="700" alt="volcano_plot" src="https://github.com/user-attachments/assets/72204ea7-b46e-4d82-841d-eee142899109" />
 
 ##### **MA plot: Mean expression vs log fold-change**
 <img width="800" height="600" alt="ma_plot" src="https://github.com/user-attachments/assets/0856bb19-76ea-4c84-8bcf-7e5095432384" />
 
 #### Functional Enrichment
-Gene lists were extracted for functional analysis:
 
 ##### All significant genes:
   ```bash
@@ -91,9 +89,6 @@ Gene lists were extracted for functional analysis:
   * 139 results/upregulated_gene_ids.txt
   * 642 total
 
- ```bash
-make enrichment
-```
 <img width="1000" height="600" alt="functional_categories" src="https://github.com/user-attachments/assets/b0f97d4e-c263-4709-ac89-0b5fe34f1deb" />
 
 ## Discussion
